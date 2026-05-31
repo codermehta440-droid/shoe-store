@@ -684,15 +684,12 @@ exports.getForgotPassword = (req, res) => {
 };
 
 exports.postForgotPassword = async (req, res) => {
-
     try {
-
         const { email } = req.body;
-
         const user = await User.findOne({ email });
 
+        // CRITICAL FIX: Add "return" here so code stops executing if user doesn't exist
         if (!user) {
-
             return res.render('auth/forgotPassword', {
                 isLoggedIn: false,
                 isloginpage: false,
@@ -701,38 +698,25 @@ exports.postForgotPassword = async (req, res) => {
                 success: null,
                 oldInput: { email }
             });
-
         }
 
+        // Yeh code tabhi chalega jab user sach mein exist karta ho
         const token = crypto.randomBytes(32).toString("hex");
-
         user.resetToken = token;
-
-        user.resetTokenExpiration =
-            Date.now() + 3600000; // 1 hour
+        user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
 
         await user.save();
 
-        const resetLink =
-            `${process.env.BASE_URL}/reset-password/${token}`;
+        const resetLink = `${process.env.BASE_URL}/reset-password/${token}`;
 
         await transporter.sendMail({
-
             from: process.env.EMAIL_USER,
-
             to: user.email,
-
             subject: "Password Reset Request",
-
             html: `
                 <h2>Password Reset</h2>
-
                 <p>Click below link to reset password:</p>
-
-                <a href="${resetLink}">
-                    Reset Password
-                </a>
-
+                <a href="${resetLink}">Reset Password</a>
                 <p>This link expires in 1 hour.</p>
             `
         });
@@ -743,17 +727,14 @@ exports.postForgotPassword = async (req, res) => {
             ishostloginpage: false,
             error: [],
             success: 'Reset link sent to your email',
-            oldInput: {
-                email: ''
-            }
+            oldInput: { email: '' }
         });
 
     } catch (err) {
-
         console.log(err);
-
+        // Catch block fix: Safe fallback taaki server hang na ho agar koi mail send hone mein dikkat aaye
+        res.status(500).send("Something went wrong on the server.");
     }
-
 };
 
 exports.getResetPassword = async (req, res) => {
