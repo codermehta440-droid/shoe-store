@@ -1,0 +1,145 @@
+<nav>
+  <!-- UPPER NAV -->
+  <div class="upper">
+    <!-- logo -->
+    <div class="logo">
+      <img src="/images/logo.png" alt="logo" />
+    </div>
+
+    <!-- search -->
+    <div class="search">
+      <input type="search" placeholder="Search your product" />
+
+      <i class="ri-search-line"></i>
+    </div>
+
+<!-- login signup -->
+
+<% if(!isLoggedIn){ %>
+
+<div class="log-sign">
+  <button><a href="/login">Login</a></button>
+  <button><a href="/signup">Signup</a></button>
+</div>
+
+<% } else if(isHostLoggedIn) { %>
+
+<div class="user-section">
+
+  <div class="user-profile">
+    <i class="ri-user-3-fill"></i>
+
+    <span>
+      <%= host.name %>
+    </span>
+  </div>
+
+  <form action="/logout" method="POST">
+    <button type="submit" class="logout-btn">
+      Logout
+    </button>
+  </form>
+
+</div>
+
+<% } else if(!isHostLoggedIn && isLoggedIn) { %>
+
+<div class="user-section">
+
+  <div class="user-profile">
+    <i class="ri-user-3-fill"></i>
+
+    <span>
+      <%= user.fullName %>
+    </span>
+  </div>
+
+  <form action="/logout" method="POST">
+    <button type="submit" class="logout-btn">
+      Logout
+    </button>
+  </form>
+
+</div>
+
+<% } %>
+    
+  </div>
+
+  <!-- LOWER NAV -->
+  <div class="lower">
+    <!-- CATEGORY -->
+    <div class="category-menu">
+      <div class="btn">
+        <div class="category-btn">
+          <i class="ri-menu-line"></i>
+          <span>All Categories</span>
+        </div>
+      </div>
+
+      <!-- dropdown -->
+      <div class="menu">
+        <a href="#">Sneakers</a>
+        <a href="#">Sports Shoes</a>
+        <a href="#">Formal Shoes</a>
+        <a href="#">Sandals</a>
+        <a href="#">Boots</a>
+      </div>
+    </div>
+
+    <!-- desktop links -->
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="#">About</a>
+      <a href="#">Products</a>
+      <a href="#">Shoes</a>
+
+      <% if(isHostLoggedIn) { %>
+          <a href="/host/host-products">Products List</a>
+          <a href="<%= editing ? '/host/edit-product' : '/host/add-product' %>">Add product</a>
+     <% } %>
+    </div>
+
+<!-- cart -->
+ <div class="cart-track">
+    <a href="/cart" class="cart">
+      <i class="ri-shopping-cart-2-line"></i>
+      <span id="price">₹<%= totalPrice > 300 ? totalPrice - 300 : totalPrice %></span>
+    </a>
+
+    <a href="/order-tracking" class="cart">
+      <i class="ri-truck-line"></i>
+    </a>
+  </div>
+
+    <!-- mobile icon -->
+    <div class="menu-toggle">
+      <i class="ri-menu-3-line"></i>
+    </div>
+
+    <!-- mobile menu -->
+    <div class="mobile-menu">
+      <div class="links">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Products</a>
+        <a href="#">Shoes</a>
+      </div>
+
+      <div class="cart">
+        <span>
+          <i class="ri-shopping-cart-2-line"></i>
+          Cart
+        </span>
+
+        <select>
+          <option>India</option>
+          <option>USA</option>
+        </select>
+      </div>
+
+  <button><a href="/login">Login</a></button>
+  <button><a href="/signup">Signup</a></button>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,170 @@
+<%- include('../partials/authPartials/head') %>
+
+  <body>
+    <!-- NAVBAR -->
+     <%- include('../partials/authPartials/nav') %>
+
+    <!-- SIGNUP SECTION -->
+    <main>
+      <div class="signup-container">
+        <!-- LEFT SIDE -->
+        <div class="left-side">
+          <div class="content">
+            <h1>Create Account 🚀</h1>
+
+            <p>
+              Join our footwear community and explore premium shoes with stylish
+              modern collections and comfort.
+            </p>
+          </div>
+
+          <!-- DESIGN BOX -->
+          <div class="design-box">
+            <div class="circle one"></div>
+            <div class="circle two"></div>
+
+            <div class="shoe-card">
+              <i class="ri-user-star-fill"></i>
+
+              <h3>Join Fashion World</h3>
+
+              <p>Style • Comfort • Premium</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="right-side">
+          <div class="form-head">
+            <h2>Create Account</h2>
+
+            <p>Fill your details below</p>
+          </div>
+ 
+          <% if(errors.length > 0){ %>
+
+           <div class="err-msg">
+             <% errors.forEach(err => { %>
+               <ul> Error :- <%= err %> </ul>
+            <% }) %>
+           </div>
+
+          <% } %>
+
+          <!-- FORM -->
+          <form action="/signup" method="POST">
+            <!-- NAME -->
+            <div class="input-box">
+              <label>Full Name</label>
+
+              <div class="input-field">
+                <i class="ri-user-line"></i>
+
+                <input
+                  type="text"
+                  placeholder="Enter your full name"
+                  required
+                  name="fullName"
+                  value="<%= oldInput.fullName %>"
+                />
+              </div>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="input-box">
+              <label>Email Address</label>
+
+              <div class="input-field">
+                <i class="ri-mail-line"></i>
+
+                <input type="email" placeholder="Enter your email" required name="email" value="<%= oldInput.email %>"/>
+              </div>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="input-box">
+              <label>Password</label>
+
+              <div class="input-field password-field">
+                <i class="ri-lock-line"></i>
+
+                <input
+                  type="password"
+                  placeholder="Create password"
+                  id="password"
+                  required
+                  name="password"
+                  value="<%= oldInput.password %>"
+                />
+
+                <i class="ri-eye-off-line toggle-password"></i>
+              </div>
+            </div>
+
+            <!-- CONFIRM PASSWORD -->
+            <div class="input-box">
+              <label>Confirm Password</label>
+
+              <div class="input-field password-field">
+                <i class="ri-lock-password-line"></i>
+
+                <input
+                  type="password"
+                  placeholder="Confirm password"
+                  id="confirmPassword"
+                  required
+                  name="confPass"
+                  value="<%= oldInput.confPass %>"
+                />
+
+                <i class="ri-eye-off-line toggle-confirm"></i>
+              </div>
+            </div>
+
+            <!-- TERMS -->
+            <div class="remember-box">
+              <div class="remember">
+                <input type="checkbox" required />
+                <span>I agree to Terms & Conditions</span>
+              </div>
+            </div>
+
+            <!-- BUTTON -->
+            <button type="submit" class="signup-btn">Create Account</button>
+          </form>
+
+          <!-- OR -->
+          <div class="or">
+            <span></span>
+            <p>OR</p>
+            <span></span>
+          </div>
+
+          <!-- SOCIAL -->
+          <div class="social-login">
+            <button>
+              <i class="ri-google-fill"></i>
+              Google
+            </button>
+
+            <button>
+              <i class="ri-facebook-fill"></i>
+              Facebook
+            </button>
+          </div>
+
+          <!-- LOGIN -->
+          <div class="create-account">
+            <p>
+              Already have an account?
+              <a href="/login">Login Now</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- JS -->
+    <script src="/js/signUp.js"></script>
+  </body>
+</html>

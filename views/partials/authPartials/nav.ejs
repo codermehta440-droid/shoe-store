@@ -1,0 +1,30 @@
+<nav>
+  <div class="logo">
+    <img src="/images/logo.png" alt="logo" />
+  </div>
+
+<% if(!isloginpage && !ishostloginpage){ %>
+
+  <button class="login-btn-nav">
+    <a href="/login">Login</a>
+  </button>
+
+<% } else if(ishostloginpage){ %>
+
+  <button class="login-btn-nav">
+    <a href="/login">User Login</a>
+  </button>
+
+<% } else { %>
+
+  <button class="login-btn-nav">
+    <a href="/signup">Signup</a>
+  </button>
+
+<% } %>
+
+  <!-- MOBILE MENU -->
+  <div class="menu-toggle">
+    <i class="ri-menu-3-line"></i>  
+  </div>
+</nav>

@@ -1,0 +1,135 @@
+<%- include('../partials/authPartials/head') %>
+  <body>
+    <!-- NAVBAR -->
+     <%- include('../partials/authPartials/nav') %>
+
+    <!-- LOGIN SECTION -->
+    <main>
+      <div class="login-container">
+        <!-- LEFT SIDE -->
+        <div class="left-side">
+          <div class="content">
+            <h1>Welcome Back 👋</h1>
+
+            <p>
+              Login to explore premium footwear collections with modern style,
+              comfort and fashion.
+            </p>
+          </div>
+
+          <!-- NEW DESIGN BOX -->
+          <div class="design-box">
+            <div class="circle one"></div>
+            <div class="circle two"></div>
+
+            <div class="shoe-card">
+              <i class="ri-footprint-fill"></i>
+              <h3>Premium Sneakers</h3>
+              <p>Comfort • Fashion • Style</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="right-side">
+          <div class="form-head">
+            <h2>Login Account</h2>
+            <p>Enter your details below</p>
+          </div>
+
+          <% if(error.length > 0){ %>
+
+           <div class="err-msg">
+             <% error.forEach(err => { %>
+               <ul> Error :- <%= err %> </ul>
+            <% }) %>
+           </div>
+
+          <% } %>
+
+          <!-- FORM -->
+          <form action="/login" method="POST">
+            <!-- EMAIL -->
+            <div class="input-box">
+              <label>Email Address</label>
+
+              <div class="input-field">
+                <i class="ri-mail-line"></i>
+
+                <input type="email" placeholder="Enter your email" required name="email" value="<%= oldInput?.email || '' %>"/>
+              </div>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="input-box">
+              <label>Password</label>
+
+              <div class="input-field password-field">
+                <i class="ri-lock-line"></i>
+
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  id="password"
+                  required
+                  name="password"
+                  value="<%= oldInput?.password || '' %>"
+                />
+
+                <i class="ri-eye-off-line toggle-password"></i>
+              </div>
+            </div>
+
+            <!-- REMEMBER -->
+            <div class="remember-box">
+              <div class="remember">
+                <input type="checkbox" />
+                <span>Remember Me</span>
+              </div>
+
+              <a href="/forgot-password">Forgot Password?</a>
+            </div>
+
+            <!-- BUTTON -->
+            <button type="submit" class="login-btn">Login Now</button>
+          </form>
+
+          <!-- OR -->
+          <div class="or">
+            <span></span>
+            <p>OR</p>
+            <span></span>
+          </div>
+
+          <!-- SOCIAL -->
+          <div class="social-login">
+            <a href="">
+            <button>
+              <i class="ri-google-fill"></i>
+              Google
+            </button>
+            </a>
+
+            <a href="/host/hostLogin">
+             <button>
+              <i class="ri-admin-fill"></i>
+              Admin Login
+             </button>
+            </a>
+          </div>
+
+          <!-- CREATE ACCOUNT -->
+          <div class="create-account">
+            <p>
+              Don't have an account?
+              <a href="/signup">Create Account</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- JS -->
+    <script src="/js/login.js"></script>
+  </body>
+</html>

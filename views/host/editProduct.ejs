@@ -1,0 +1,161 @@
+<%- include('../partials/storePartials/head') %>
+
+<body>
+
+  <%- include('../partials/storePartials/nav') %>
+
+  <main class="edit-product-container">
+
+    <div class="form-box">
+
+      <div class="title">
+        <h1>
+          <%= editing ? "Edit Product" : "Add Product" %>
+        </h1>
+
+        <p>
+          Fill all product details carefully
+        </p>
+      </div>
+
+      <form
+        action="<%= editing ? '/host/edit-product' : '/host/add-product' %>"
+        method="POST"
+        class="product-form"
+      >
+
+        <!-- hidden product id -->
+        <% if(editing){ %>
+
+          <input
+            type="hidden"
+            name="productId"
+            value="<%= product._id %>"
+          />
+
+        <% } %>
+
+        <!-- Product Name -->
+        <div class="input-box">
+
+          <label>Product Name</label>
+
+          <input
+            type="text"
+            name="title"
+            placeholder="Enter product name"
+            value="<%= editing ? product.title : '' %>"
+            required
+          />
+
+        </div>
+
+        <!-- Price -->
+        <div class="input-box">
+
+          <label>Price</label>
+
+          <input
+            type="number"
+            name="price"
+            placeholder="Enter product price"
+            value="<%= editing ? product.price : '' %>"
+            required
+          />
+
+        </div>
+
+        <!-- Category -->
+<div class="input-box">
+
+  <label>Category</label>
+
+  <select name="category">
+
+    <option value="">
+      Select Category
+    </option>
+
+    <option 
+      value="Sneakers"
+      <%= editing && product.category === 'Sneakers' ? 'selected' : '' %>
+    >
+      Sneakers
+    </option>
+
+    <option 
+      value="Sports Shoes"
+      <%= editing && product.category === 'Sports Shoes' ? 'selected' : '' %>
+    >
+      Sports Shoes
+    </option>
+
+    <option 
+      value="Formal Shoes"
+      <%= editing && product.category === 'Formal Shoes' ? 'selected' : '' %>
+    >
+      Formal Shoes
+    </option>
+
+    <option 
+      value="Boots"
+      <%= editing && product.category === 'Boots' ? 'selected' : '' %>
+    >
+      Boots
+    </option>
+
+    <option 
+      value="Sandals"
+      <%= editing && product.category === 'Sandals' ? 'selected' : '' %>
+    >
+      Sandals
+    </option>
+
+  </select>
+
+</div>
+
+        <!-- Image -->
+        <div class="input-box">
+
+          <label>Image URL</label>
+
+          <input
+            type="text"
+            name="image"
+            placeholder="Paste image url"
+            value="<%= editing ? product.image : '' %>"
+            required
+          />
+
+        </div>
+
+        <!-- Description -->
+        <div class="input-box">
+
+          <label>Description</label>
+
+          <textarea
+            name="description"
+            placeholder="Write description"
+            required
+          ><%= editing ? product.description : '' %></textarea>
+
+        </div>
+
+        <button type="submit" class="submit-btn">
+
+          <%= editing ? "Update Product" : "Add Product" %>
+
+        </button>
+
+      </form>
+
+    </div>
+
+  </main>
+
+  <script src="/js/editProduct.js"></script>
+
+</body>
+</html>

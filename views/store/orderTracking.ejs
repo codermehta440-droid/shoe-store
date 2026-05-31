@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order tracking</title>
+
+    <!-- Remix Icon -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/output.css" />
+    <link rel="stylesheet" href="/css/productDetails.css" />
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/output.css" />
+    <link rel="stylesheet" href="/css/orderTracking.css" />
+
+</head>
+
+<body>
+    <%- include('../partials/storePartials/nav') %>
+
+  <div class="tracking-container">
+
+    <!-- TOP -->
+
+    <div class="top-box">
+
+      <h1>Shipment Tracking</h1>
+
+      <p>
+        ORDER TRACKING : #ODR-2026
+      </p>
+
+    </div>
+
+    <!-- INFO -->
+
+    <div class="info-box">
+
+      <div class="info-item">
+        <h3>Shipped Via</h3>
+        <p>ANAND Express</p>
+      </div>
+
+      <div class="info-item">
+        <h3>Status</h3>
+        <p>Checking Quality</p>
+      </div>
+
+      <div class="info-item">
+        <h3>Expected Date</h3>
+        <p>3-5 Days</p>
+      </div>
+
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+
+    <% if(message){ %>
+
+      <div class="success-message" id="successMsg">
+
+        <i class="ri-checkbox-circle-fill"></i>
+
+        <span><%= message %></span>
+
+      </div>
+
+    <% } %>
+
+    <!-- TRACKING -->
+
+    <div class="tracking-section">
+
+      <div class="tracking-line">
+        <div class="progress"></div>
+      </div>
+
+      <div class="steps">
+
+        <!-- STEP 1 -->
+
+        <div class="step">
+
+          <div class="circle active">
+            <i class="ri-file-list-3-line"></i>
+          </div>
+
+          <h4>Confirmed Order</h4>
+
+        </div>
+
+        <!-- STEP 2 -->
+
+        <div class="step">
+
+          <div class="circle active">
+            <i class="ri-settings-3-line"></i>
+          </div>
+
+          <h4>Processing Order</h4>
+
+        </div>
+
+        <!-- STEP 3 -->
+
+        <div class="step">
+
+          <div class="circle active">
+            <i class="ri-shield-check-line"></i>
+          </div>
+
+          <h4>Quality Check</h4>
+
+        </div>
+
+        <!-- STEP 4 -->
+
+        <div class="step">
+
+          <div class="circle pending">
+            <i class="ri-truck-line"></i>
+          </div>
+
+          <h4>Dispatched Item</h4>
+
+        </div>
+
+        <!-- STEP 5 -->
+
+        <div class="step">
+
+          <div class="circle pending">
+            <i class="ri-home-4-line"></i>
+          </div>
+
+          <h4>Product Delivered</h4>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ORDER ITEMS -->
+
+<div class="order-items">
+
+  <h2>Ordered Items</h2>
+
+  <div class="items-container">
+
+    <% order?.items?.forEach(item => { %>
+
+      <div class="order-item">
+
+        <div class="item-left">
+
+          <img src="<%= item.image %>" alt="product">
+
+          <div class="item-info">
+
+            <h3><%= item.title %></h3>
+
+            <p>
+              Qty : <%= item.quantity %>
+            </p>
+
+          </div>
+
+        </div>
+
+        <h4>
+          ₹<%= item.price * item.quantity %>
+        </h4>
+
+      </div>
+
+    <% }) %>
+
+  </div>
+
+</div>
+
+    <!-- ORDER DETAILS -->
+
+    <div class="order-details">
+
+      <h2>Order Details</h2>
+
+      <div class="details-box">
+
+        <p>
+          <strong>Total Amount:</strong>
+          ₹<%= order?.totalPrice || 0 %>
+        </p>
+
+        <p>
+          <strong>Payment Method:</strong>
+          <%= order?.paymentMethod || 'COD' %>
+        </p>
+
+        <p>
+          <strong>Total Items:</strong>
+          <%= order?.items?.length || 0 %>
+        </p>
+
+        <p>
+          <strong>Order Status:</strong>
+          Processing
+        </p>
+
+      </div>
+
+    </div>
+
+<!-- DOWNLOAD BILL -->
+
+<div class="download-btn-box">
+
+  <a href="/download-bill" class="download-btn">
+
+    <i class="ri-download-2-line"></i>
+
+    Download Bill
+
+  </a>
+
+</div>
+
+  </div>
+
+  <script>
+
+    setTimeout(() => {
+
+      const msg = document.getElementById("successMsg");
+
+      if(msg){
+        msg.style.display = "none";
+      }
+
+    }, 3000);
+
+  </script>
+
+</body>
+</html>

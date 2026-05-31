@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Details</title>
+
+    <!-- Remix Icon -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/output.css" />
+    <link rel="stylesheet" href="/css/productDetails.css" />
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <%- include('../partials/storePartials/nav') %>
+
+    <main>
+      <!-- ================= PRODUCT DETAILS ================= -->
+
+      <div class="details-page">
+        <!-- LEFT SECTION -->
+
+        <div class="left-section">
+          <div class="big-image">
+            <img id="mainImage" src="<%= product.image %>" alt="shoe" />
+          </div>
+
+          <div class="image-slider">
+            <div class="small-img active">
+              <img src="<%= product.image %>" alt="" />
+            </div>
+
+            <div class="small-img">
+              <img src="/images/white-sneaker.png" alt="" />
+            </div>
+
+            <div class="small-img">
+              <img src="/images/red sneakers.png" alt="" />
+            </div>
+
+            <div class="small-img">
+              <img src="/images/blue sneakers.png" alt="" />
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT SECTION -->
+
+        <div class="right-section">
+          <div class="tag">Best Seller</div>
+
+          <h1 class="product-name"><%= product.title %></h1>
+
+          <!-- rating -->
+
+          <div class="rating">
+            <div class="stars">
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-half-fill"></i>
+            </div>
+
+            <p>4.5 Rating • 2,132 Reviews</p>
+          </div>
+
+          <!-- price -->
+
+          <div class="price">
+            <h2 class="new-price">₹<%= product.price %></h2>
+
+            <h3 class="old-price">₹1,699</h3>
+
+            <p class="discount">26% OFF</p>
+          </div>
+
+          <!-- description -->
+
+          <p class="description"><%= product.description %></p>
+
+          <!-- colors -->
+
+          <div class="color-section">
+            <h3>Select Color</h3>
+
+            <div class="colors">
+              <div class="color black active"></div>
+
+              <div class="color red"></div>
+
+              <div class="color blue"></div>
+
+              <div class="color green"></div>
+            </div>
+          </div>
+
+          <!-- sizes -->
+
+          <div class="size-section">
+            <h3>Select Size</h3>
+
+            <div class="sizes">
+              <div class="size">6</div>
+
+              <div class="size active">7</div>
+
+              <div class="size">8</div>
+
+              <div class="size">9</div>
+
+              <div class="size">10</div>
+            </div>
+          </div>
+
+          <!-- delivery -->
+
+          <div class="delivery">
+            <h3>Delivery Details</h3>
+
+            <div class="delivery-box">
+              <div class="delivery-item">
+                <i class="ri-truck-line"></i>
+                <p>Free Delivery Available</p>
+              </div>
+
+              <div class="delivery-item">
+                <i class="ri-refresh-line"></i>
+                <p>7 Days Easy Return Policy</p>
+              </div>
+
+              <div class="delivery-item">
+                <i class="ri-secure-payment-line"></i>
+                <p>100% Secure Payment</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- highlights -->
+
+          <div class="highlights">
+            <h3>Product Highlights</h3>
+
+            <ul>
+              <li>Premium breathable mesh material</li>
+
+              <li>Soft memory foam cushioning</li>
+
+              <li>Anti-slip durable rubber sole</li>
+
+              <li>Lightweight and flexible design</li>
+
+              <li>Perfect for sports and casual wear</li>
+            </ul>
+          </div>
+
+          <!-- product details -->
+
+          <div class="details">
+            <h3>Product Details</h3>
+
+            <ul>
+              <li>Brand : Urban Flex</li>
+
+              <li>Category : Sports Sneaker</li>
+
+              <li>Material : Mesh + Rubber</li>
+
+              <li>Weight : 450gm</li>
+
+              <li>Warranty : 6 Months</li>
+            </ul>
+          </div>
+
+          <!-- buttons -->
+
+          <div class="buttons">
+            <button class="wishlist">
+              <i class="ri-heart-line"></i>
+              Add Wishlist
+            </button>
+
+            <button class="share">
+              <i class="ri-share-line"></i>
+              Share
+            </button>
+
+            <button class="compare">
+              <i class="ri-scales-line"></i>
+              Compare
+            </button>
+          </div>
+
+          <!-- fixed sticky buttons -->
+
+          <div class="fixed-buttons">
+            <form action="/cart/add/<%= product._id %>" method="POST">
+              <button class="cart-btn">
+                <i class="ri-shopping-cart-line"></i>
+                Add To Cart
+              </button>
+            </form>
+
+            <button class="buy-btn">
+              <i class="ri-flashlight-line"></i>
+              Buy Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= RELATED PRODUCTS ================= -->
+
+      <div class="related-products">
+        <div class="heading">
+          <h2>Related Products</h2>
+        </div>
+
+        <div class="product-slider">
+          <!-- card 1 -->
+
+          <div class="product-card">
+            <div class="img">
+              <img src="/images/white-sneaker.png" alt="" />
+            </div>
+
+            <div class="text">
+              <h3>White Casual Sneaker</h3>
+
+              <p>Modern lightweight design.</p>
+
+              <h4>₹1,099</h4>
+            </div>
+          </div>
+
+          <!-- card 2 -->
+
+          <div class="product-card">
+            <div class="img">
+              <img src="/images/red sneakers.png" alt="" />
+            </div>
+
+            <div class="text">
+              <h3>Red Running Shoe</h3>
+
+              <p>Premium running comfort.</p>
+
+              <h4>₹1,349</h4>
+            </div>
+          </div>
+
+          <!-- card 3 -->
+
+          <div class="product-card">
+            <div class="img">
+              <img src="/images/blue sneakers.png" alt="" />
+            </div>
+
+            <div class="text">
+              <h3>Blue Urban Sneaker</h3>
+
+              <p>Street fashion collection.</p>
+
+              <h4>₹1,299</h4>
+            </div>
+          </div>
+
+          <!-- card 4 -->
+
+          <div class="product-card">
+            <div class="img">
+              <img src="/images/sports shoes.png" alt="" />
+            </div>
+
+            <div class="text">
+              <h3>Sports Training Shoe</h3>
+
+              <p>Perfect for gym activities.</p>
+
+              <h4>₹1,599</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- JS -->
+    <script src="/js/productDetails.js"></script>
+  </body>
+</html>

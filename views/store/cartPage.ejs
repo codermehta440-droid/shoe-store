@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart Page</title>
+
+    <!-- Remix Icon -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/output.css" />
+    <link rel="stylesheet" href="/css/mix.css">
+    <link rel="stylesheet" href="/css/cart.css" />
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+
+<nav>
+  <!-- UPPER NAV -->
+  <div class="upper">
+    <!-- logo -->
+    <div class="logo">
+      <img src="/images/logo.png" alt="logo" />
+    </div>
+
+    <!-- search -->
+    <div class="search">
+      <input type="search" placeholder="Search your product" />
+
+      <i class="ri-search-line"></i>
+    </div>
+
+<!-- login signup -->
+
+<% if(!isLoggedIn){ %>
+
+<div class="log-sign">
+  <button><a href="/login">Login</a></button>
+  <button><a href="/signup">Signup</a></button>
+</div>
+
+<% } else if(isHostLoggedIn) { %>
+
+<div class="user-section">
+
+  <div class="user-profile">
+    <i class="ri-user-3-fill"></i>
+
+    <span>
+      <%= host.name %>
+    </span>
+  </div>
+
+  <form action="/logout" method="POST">
+    <button type="submit" class="logout-btn">
+      Logout
+    </button>
+  </form>
+
+</div>
+
+<% } else if(!isHostLoggedIn || isLoggedIn) { %>
+
+<div class="user-section">
+
+  <div class="user-profile">
+    <i class="ri-user-3-fill"></i>
+
+    <span>
+      <%= user.fullName %>
+    </span>
+  </div>
+
+  <form action="/logout" method="POST">
+    <button type="submit" class="logout-btn">
+      Logout
+    </button>
+  </form>
+
+</div>
+
+<% } %>
+    
+  </div>
+
+  <!-- LOWER NAV -->
+  <div class="lower">
+    <!-- CATEGORY -->
+    <div class="category-menu">
+      <div class="btn">
+        <div class="category-btn">
+          <i class="ri-menu-line"></i>
+          <span>All Categories</span>
+        </div>
+      </div>
+
+      <!-- dropdown -->
+      <div class="menu">
+        <a href="#">Sneakers</a>
+        <a href="#">Sports Shoes</a>
+        <a href="#">Formal Shoes</a>
+        <a href="#">Sandals</a>
+        <a href="#">Boots</a>
+      </div>
+    </div>
+
+    <!-- desktop links -->
+    <div class="links">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Products</a>
+      <a href="#">Shoes</a>
+
+      <% if(isHostLoggedIn) { %>
+          <a href="/host/host-products">Products List</a>
+          <a href="<%= editing ? '/host/edit-product' : '/host/add-product' %>">Add product</a>
+     <% } %>
+    </div>
+
+<!-- cart -->
+ <div class="cart-track">
+    <a href="/cart" class="cart">
+      <i class="ri-shopping-cart-2-line"></i>
+      <span id="price">₹<%= totalPrice > 300 ? totalPrice - 300 : totalPrice %></span>
+    </a>
+
+    <a href="/order-tracking" class="cart">
+      <i class="ri-truck-line"></i>
+    </a>
+  </div>
+
+    <!-- mobile icon -->
+    <div class="menu-toggle">
+      <i class="ri-menu-3-line"></i>
+    </div>
+
+    <!-- mobile menu -->
+    <div class="mobile-menu">
+      <div class="links">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Products</a>
+        <a href="#">Shoes</a>
+      </div>
+
+      <div class="cart">
+        <span>
+          <i class="ri-shopping-cart-2-line"></i>
+          Cart
+        </span>
+
+        <select>
+          <option>India</option>
+          <option>USA</option>
+        </select>
+      </div>
+
+  <button><a href="/login">Login</a></button>
+  <button><a href="/signup">Signup</a></button>
+    </div>
+  </div>
+</nav>
+
+
+    <main>
+
+      <!-- ================= CART SECTION ================= -->
+
+<% if(message){ %>
+
+<style>
+  body{
+    overflow:hidden;
+  }
+</style>
+
+<div class="order-popup" id="orderPopup">
+
+  <div class="popup-box">
+
+    <div class="success-animation">
+
+      <div class="check-icon">
+        <i class="ri-check-line"></i>
+      </div>
+
+    </div>
+
+    <h2>Order Successful</h2>
+
+    <p>
+      Thanks for your order. We’re preparing it now.
+    </p>
+
+    <span class="redirect-text">
+      Redirecting you to the tracking page...
+    </span>
+
+  </div>
+
+</div>
+
+<script>
+
+  window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+      window.location.href = "/order-tracking";
+
+    }, 3000);
+
+  });
+
+</script>
+
+<% } %>
+
+      <section class="cart-page">
+
+        <!-- LEFT -->
+
+        <div class="cart-left">
+
+          <div class="cart-heading">
+            <h1>Shopping Cart</h1> 
+            <p><%= cartItems.length %> Items Added</p>
+          </div>
+
+          <!-- CART ITEM -->
+
+          <% cartItems.forEach(item => { %>
+
+          <div class="cart-item">
+
+            <div class="cart-image">
+              <img src="<%= item.image %>" alt="">
+            </div>
+
+            <div class="cart-details">
+
+              <div class="top">
+
+                <div>
+                  <h2><%= item.title %></h2>
+                  <p class="desc"> 
+                    <%= item.description ? item.description.substring(0, 80) : "No description" %>...
+                  </p> 
+                </div>
+                <a href="/cart/delete/<%= item.productId %>">
+                  <i class="ri-delete-bin-6-line"></i>
+                </a>
+
+              </div>
+
+              <div class="price-section">
+
+                <div class="price">
+                  <h3>₹<%= item.price %></h3>
+
+                  <span>
+                    ₹<%= item.price + 500 %>
+                  </span>
+                </div>
+
+                <div class="quantity">
+
+                  <a href="/cart/decrease/<%= item._id %>">
+                    <i class="ri-subtract-line"></i>
+                  </a>
+
+                  <p><%= item.quantity %></p>
+
+                  <a href="/cart/increase/<%= item._id %>">
+                    <i class="ri-add-line"></i>
+                  </a>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <% }) %>
+
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="cart-right">
+
+          <div class="summary-box">
+
+            <h2>Order Summary</h2>
+
+            <div class="summary-item">
+              <p>Subtotal</p>
+              <span>₹<%= totalPrice %></span>
+            </div>
+
+            <div class="summary-item">
+              <p>Delivery</p>
+              <span>Free</span>
+            </div>
+
+            <div class="summary-item">
+              <p>Discount</p>
+              <span>- ₹300</span>
+            </div>
+
+            <div class="summary-item total">
+              <p>Total</p>
+              <span> ₹<%= totalPrice > 300 ? totalPrice - 300 : totalPrice %> </span>
+            </div>
+
+            <!-- ADDRESS -->
+
+            <div class="address-box">
+
+              <h3>Delivery Address</h3>
+
+              <textarea required placeholder="Enter your address"></textarea>
+
+            </div>
+
+            <!-- PAYMENT -->
+
+<form action="/place-order" method="POST">
+
+  <div class="payment-method">
+
+    <h3>Payment Method</h3>
+
+    <label class="method active">
+
+      <input 
+        type="radio" 
+        name="paymentMethod" 
+        value="COD" 
+        checked
+      >
+
+      <i class="ri-money-rupee-circle-line"></i>
+
+      <p>Cash On Delivery</p>
+
+    </label>
+
+  </div>
+
+  <button type="submit" class="place-order">
+    <i class="ri-shopping-bag-3-line"></i>
+    Place Order
+  </button>
+
+</form>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </body>
+</html>
