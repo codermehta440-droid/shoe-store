@@ -8,7 +8,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build": "npx @tailwindcss/cli -i ./views/input.css -o ./public/css/output.css"
+    "build": "echo \"Skipping production CSS build: using committed output.css\"",
+    "build:css": "npx @tailwindcss/cli -i ./views/input.css -o ./public/css/output.css"
   },
   "keywords": [],
   "author": "",
