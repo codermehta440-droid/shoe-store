@@ -1,11 +1,24 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+if (!process.env.SENDGRID_API_KEY) {
+  throw new Error('SENDGRID_API_KEY is required in .env for email delivery');
+}
 
-module.exports = transporter;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+const sendMail = async (message) => {
+  const msg = {
+    from: process.env.EMAIL_USER || process.env.SENDGRID_FROM,
+    ...message
+  };
+
+  if (!msg.from) {
+    throw new Error('Email sender address is required via EMAIL_USER or SENDGRID_FROM');
+  }
+
+  return sgMail.send(msg);
+};
+
+module.exports = {
+  sendMail
+};
