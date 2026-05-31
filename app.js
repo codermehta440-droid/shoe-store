@@ -1,5 +1,10 @@
 require('dotenv').config();
 
+if (!globalThis.crypto || !globalThis.crypto.getRandomValues) {
+  const { webcrypto } = require('crypto');
+  globalThis.crypto = webcrypto;
+}
+
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
