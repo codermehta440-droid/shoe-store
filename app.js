@@ -1,20 +1,20 @@
 require('dotenv').config();
 
-const cryptoModule = (() => {
+const nodeCrypto = (() => {
   try {
-    return require('node:crypto');
-  } catch (error) {
     return require('crypto');
+  } catch (error) {
+    return null;
   }
 })();
 
-if (!globalThis.crypto || !globalThis.crypto.getRandomValues) {
-  if (cryptoModule?.webcrypto?.getRandomValues) {
-    globalThis.crypto = cryptoModule.webcrypto;
-  } else if (typeof cryptoModule?.randomBytes === 'function') {
+if (!globalThis.crypto || typeof globalThis.crypto.getRandomValues !== 'function') {
+  if (nodeCrypto?.webcrypto?.getRandomValues) {
+    globalThis.crypto = nodeCrypto.webcrypto;
+  } else if (typeof nodeCrypto?.randomBytes === 'function') {
     globalThis.crypto = {
       getRandomValues: (array) => {
-        const bytes = cryptoModule.randomBytes(array.length);
+        const bytes = nodeCrypto.randomBytes(array.length);
         array.set(bytes);
         return array;
       }
@@ -23,6 +23,11 @@ if (!globalThis.crypto || !globalThis.crypto.getRandomValues) {
     throw new Error('No crypto implementation available for MongoDB driver');
   }
 }
+
+global.crypto = globalThis.crypto;
+
+globalThis.crypto = globalThis.crypto;
+
 
 Object.defineProperty(globalThis, 'crypto', {
   value: globalThis.crypto,
@@ -81,7 +86,7 @@ const store = new MongoDBStore({
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'change_this_secret',
     resave: false,
     saveUninitialized: false,
     store
@@ -93,21 +98,13 @@ app.use(cartTotalMiddleware);
 /* GLOBAL VARIABLES */
 
 app.use((req, res, next) => {
-
-  res.locals.isLoggedIn =
-    req.session.isLoggedIn || false;
-
-  res.locals.isHostLoggedIn =
-    req.session.isHostLoggedIn || false;
-
-  res.locals.user =
-    req.session.user || null;
-
-  res.locals.host =
-    req.session.host || null;
-
+  res.locals.isLoggedIn = req.session?.isLoggedIn || false;
+  res.locals.isHostLoggedIn = req.session?.isHostLoggedIn || false;
+  res.locals.user = req.session?.user || null;
+  res.locals.host = req.session?.host || null;
+  res.locals.isloginpage = false;
+  res.locals.ishostloginpage = false;
   next();
-
 });
 
 /* ROUTES */
@@ -115,49 +112,36 @@ app.use((req, res, next) => {
 app.use('/host', hostRouter);
 app.use(storeRouter);
 
-app.use((req, res, next) => {
-
-  res.locals.isloginpage = false;
-  res.locals.ishostloginpage = false;
-
-  next();
-
-});
-
 /* 404 */
 
 app.use((req, res) => {
   res.status(404).render('404');
 });
 
-/* SERVER */
-
 const PORT = process.env.PORT || 2006;
 
-const startServer = () => {
+async function startApp() {
+  if (DB_PATH) {
+    try {
+      await mongoose.connect(DB_PATH, {
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000,
+      });
+      console.log('MongoDB Connected');
+    } catch (err) {
+      console.error('Error while connecting to MongoDB:', err);
+      console.warn('MongoDB connection failed, continuing without database.');
+    }
+  } else {
+    console.warn('Warning: MONGODB_URI is not set. Running without database connection.');
+  }
+
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
-};
-
-startServer();
-
-if (DB_PATH) {
-  mongoose
-    .connect(DB_PATH, {
-      serverSelectionTimeoutMS: 5000,
-      connectTimeoutMS: 5000,
-    })
-    .then(() => {
-      console.log('MongoDB Connected');
-    })
-    .catch(err => {
-      console.log('Error while connecting to MongoDB:', err);
-      console.log('MongoDB connection failed, continuing without database.');
-    });
-} else {
-  console.log('Warning: MONGODB_URI is not set. Running without database connection.');
 }
 
-console.log("EMAIL:", process.env.EMAIL_USER);
-console.log("PASS:", process.env.EMAIL_PASS ? "Loaded" : "Not Loaded");
+startApp();
+
+console.log('EMAIL:', process.env.EMAIL_USER || 'not set');
+console.log('PASS:', process.env.EMAIL_PASS ? 'Loaded' : 'Not Loaded');
