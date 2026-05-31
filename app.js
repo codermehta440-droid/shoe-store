@@ -23,7 +23,9 @@ const DB_PATH = process.env.MONGODB_URI;
 /* VIEW ENGINE */
 
 app.set('view engine', 'ejs');
-app.set('views', 'views');
+
+// FIX: 'views' ki jagah absolute path dein __dirname ka use karke
+app.set('views', path.join(__dirname, 'views'));
 
 /* MIDDLEWARE */
 

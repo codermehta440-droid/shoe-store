@@ -281,27 +281,22 @@ exports.postLogin = async (req, res, next) => {
 
     const user = await User.findOne({ email });
 
+    if (!user) {
+        return res.render('auth/login', {
+            isloginpage: true,
+            ishostloginpage: false,
+            error: ['Invalid email or password'],
+            oldInput: { email, password }
+        });
+    }
+
     if (!user.isVerified) {
-
-        return res.render(
-            'auth/login',
-            {
-
-                isloginpage: true,
-                ishostloginpage: false,
-
-                error: [
-                    'Please verify your email first'
-                ],
-
-                oldInput: {
-                    email,
-                    password
-                }
-
-            }
-        );
-
+        return res.render('auth/login', {
+            isloginpage: true,
+            ishostloginpage: false,
+            error: ['Please verify your email first'],
+            oldInput: { email, password }
+        });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
