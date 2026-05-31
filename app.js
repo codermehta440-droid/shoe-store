@@ -28,7 +28,11 @@ app.set('views', 'views');
 /* MIDDLEWARE */
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(root, 'public')));
+app.use(
+  express.static(
+    path.join(__dirname, 'public')
+  )
+);
 
 /* SESSION STORE */
 
@@ -92,7 +96,7 @@ app.use((req, res) => {
 
 /* SERVER */
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2006;
 
 mongoose
   .connect(DB_PATH)
@@ -103,7 +107,7 @@ mongoose
     app.listen(PORT, () => {
 
       console.log(
-        `Server running on http://localhost:${PORT}`
+        `Server running on port ${PORT}`
       );
 
     });
