@@ -1,19 +1,20 @@
 require('dotenv').config();
 
-let nodeCrypto;
-try {
-  nodeCrypto = require('node:crypto');
-} catch (error) {
-  nodeCrypto = require('crypto');
-}
+const cryptoModule = (() => {
+  try {
+    return require('node:crypto');
+  } catch (error) {
+    return require('crypto');
+  }
+})();
 
 if (!globalThis.crypto || !globalThis.crypto.getRandomValues) {
-  if (nodeCrypto?.webcrypto?.getRandomValues) {
-    globalThis.crypto = nodeCrypto.webcrypto;
-  } else if (typeof nodeCrypto?.randomBytes === 'function') {
+  if (cryptoModule?.webcrypto?.getRandomValues) {
+    globalThis.crypto = cryptoModule.webcrypto;
+  } else if (typeof cryptoModule?.randomBytes === 'function') {
     globalThis.crypto = {
       getRandomValues: (array) => {
-        const bytes = nodeCrypto.randomBytes(array.length);
+        const bytes = cryptoModule.randomBytes(array.length);
         array.set(bytes);
         return array;
       }
@@ -23,7 +24,16 @@ if (!globalThis.crypto || !globalThis.crypto.getRandomValues) {
   }
 }
 
+Object.defineProperty(globalThis, 'crypto', {
+  value: globalThis.crypto,
+  writable: true,
+  configurable: true,
+  enumerable: true,
+});
+
 global.crypto = globalThis.crypto;
+
+globalThis.crypto = global.crypto;
 
 const express = require('express');
 const path = require('path');
