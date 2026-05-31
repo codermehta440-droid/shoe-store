@@ -92,7 +92,7 @@ app.use((req, res) => {
 
 /* SERVER */
 
-const PORT = process.env.PORT || 2006;
+const PORT = process.env.PORT || 3000;
 
 mongoose
   .connect(DB_PATH)
