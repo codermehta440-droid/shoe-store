@@ -99,29 +99,28 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 2006;
 
-mongoose
-  .connect(DB_PATH)
-  .then(() => {
-
-    console.log('MongoDB Connected');
-
-    app.listen(PORT, () => {
-
-      console.log(
-        `Server running on port ${PORT}`
-      );
-
-    });
-
-  })
-  .catch(err => {
-
-    console.log(
-      'Error while connecting to MongoDB:',
-      err
-    );
-
+const startServer = () => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
+};
+
+if (DB_PATH) {
+  mongoose
+    .connect(DB_PATH)
+    .then(() => {
+      console.log('MongoDB Connected');
+      startServer();
+    })
+    .catch(err => {
+      console.log('Error while connecting to MongoDB:', err);
+      console.log('Starting server without database connection. Some features may be unavailable.');
+      startServer();
+    });
+} else {
+  console.log('Warning: MONGODB_URI is not set. Starting server without database connection.');
+  startServer();
+}
 
 console.log("EMAIL:", process.env.EMAIL_USER);
 console.log("PASS:", process.env.EMAIL_PASS ? "Loaded" : "Not Loaded");
