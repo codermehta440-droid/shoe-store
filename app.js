@@ -105,21 +105,23 @@ const startServer = () => {
   });
 };
 
+startServer();
+
 if (DB_PATH) {
   mongoose
-    .connect(DB_PATH)
+    .connect(DB_PATH, {
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
+    })
     .then(() => {
       console.log('MongoDB Connected');
-      startServer();
     })
     .catch(err => {
       console.log('Error while connecting to MongoDB:', err);
-      console.log('Starting server without database connection. Some features may be unavailable.');
-      startServer();
+      console.log('MongoDB connection failed, continuing without database.');
     });
 } else {
-  console.log('Warning: MONGODB_URI is not set. Starting server without database connection.');
-  startServer();
+  console.log('Warning: MONGODB_URI is not set. Running without database connection.');
 }
 
 console.log("EMAIL:", process.env.EMAIL_USER);
