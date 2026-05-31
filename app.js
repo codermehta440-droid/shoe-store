@@ -1,9 +1,29 @@
 require('dotenv').config();
 
-if (!globalThis.crypto || !globalThis.crypto.getRandomValues) {
-  const { webcrypto } = require('crypto');
-  globalThis.crypto = webcrypto;
+let nodeCrypto;
+try {
+  nodeCrypto = require('node:crypto');
+} catch (error) {
+  nodeCrypto = require('crypto');
 }
+
+if (!globalThis.crypto || !globalThis.crypto.getRandomValues) {
+  if (nodeCrypto?.webcrypto?.getRandomValues) {
+    globalThis.crypto = nodeCrypto.webcrypto;
+  } else if (typeof nodeCrypto?.randomBytes === 'function') {
+    globalThis.crypto = {
+      getRandomValues: (array) => {
+        const bytes = nodeCrypto.randomBytes(array.length);
+        array.set(bytes);
+        return array;
+      }
+    };
+  } else {
+    throw new Error('No crypto implementation available for MongoDB driver');
+  }
+}
+
+global.crypto = globalThis.crypto;
 
 const express = require('express');
 const path = require('path');

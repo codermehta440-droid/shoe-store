@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const product = require("../models/product"); 
 const PDFDocument = require('pdfkit');
 
-const crypto = require("crypto");
+const crypto = require('node:crypto');
 const transporter = require("../utils/mailer");
 
 exports.getHomes = async (req, res, next) => {
