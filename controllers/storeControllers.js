@@ -1,8 +1,8 @@
 const { check, validationResult } = require("express-validator");
-const User = require("../models/signUp");
+const User = require("../models/signup");
 
 const bcrypt = require('bcryptjs');
-const product = require("../models/product");
+const product = require("../models/product"); 
 const PDFDocument = require('pdfkit');
 
 const crypto = require("crypto");

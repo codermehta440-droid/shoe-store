@@ -27,12 +27,11 @@ app.set('views', 'views');
 
 /* MIDDLEWARE */
 
+
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  express.static(
-    path.join(root, 'public')
-  )
-);
+
+// FIX: 'root' ki jagah seedhe '__dirname' ka use karein
+app.use(express.static(path.join(__dirname, 'public')));
 
 /* SESSION STORE */
 
