@@ -106,13 +106,16 @@ nav .log-sign button a {
   color: #fff;
   font-size: 14px;
 }
+
 .cart-track {
   display: flex;
   gap: 50px;
-  i{
-    color: black;
-  }
 }
+
+.cart-track i {
+  color: black;
+}
+
 .user-section {
   display: flex;
   align-items: center;
@@ -390,14 +393,13 @@ nav .cart span {
 }
 
 .ui .btn button a {
-  /* color: #fff; */
   color: black;
   min-height: 100%;
   padding: 10px;
+}
 
-  &:hover {
-    color: white;
-  }
+.ui .btn button a:hover {
+  color: white;
 }
 
 .ui .img {
@@ -434,16 +436,17 @@ main .t-category {
   min-width: 300px;
   text-align: center;
   gap: 15px;
-
-  span {
-    color: #259603;
-  }
-
-  h2 {
-    font-size: 2em;
-    text-transform: uppercase;
-  }
 }
+
+.t-category .head span {
+  color: #259603;
+}
+
+.t-category .head h2 {
+  font-size: 2em;
+  text-transform: uppercase;
+}
+
 
 /* the frame section */
 .t-category .frame {
@@ -465,13 +468,13 @@ main .t-category {
   gap: 2vw;
   cursor: pointer;
   z-index: 1;
-
-
-  i {
-    font-size: 30px;
-    z-index: 2;
-  }
 }
+
+.t-category .arrow i {
+  font-size: 30px;
+  z-index: 2;
+}
+
 
 .t-category .frame .products {
   background-color: white;
@@ -508,26 +511,26 @@ main .t-category {
   border-radius: 20px;
   overflow: hidden;
   position: relative;
+}
 
-  img {
-    width: 100%;
-    transform: translateY(-40px);
-  }
+.t-category .frame .product-cards .detailsLinks img {
+  width: 100%;
+  transform: translateY(-40px);
+}
 
-  .add-fav {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: rgb(5, 146, 146);
-    padding: 7px 10px;
-    border-radius: 50%;
-    color: white;
-    cursor: pointer;
+.t-category .frame .product-cards .detailsLinks .add-fav {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgb(5, 146, 146);
+  padding: 7px 10px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+}
 
-    i {
-      font-size: 1em;
-    }
-  }
+.t-category .frame .product-cards .detailsLinks i {
+  font-size: 1em;
 }
 
 .frame .product-cards .text {
@@ -535,23 +538,24 @@ main .t-category {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
 
-  p {
-    font-size: 13px;
-    color: rgb(110, 110, 110);
-  }
+.frame .product-cards .text p {
+  font-size: 13px;
+  color: rgb(110, 110, 110);
 }
 
 .frame .product-cards .text name {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  h3 {
-    font-size: 15px;
-    width: 50%;
-  }
 }
+
+.frame .product-cards .text name h3 {
+  font-size: 15px;
+  width: 50%;
+}
+
 
 .frame .product-cards .text .color {
   display: flex;
@@ -577,11 +581,12 @@ main .t-category {
 .product-cards .color .rate {
   display: flex;
   color: rgb(167, 167, 0);
-
-  i {
-    font-size: 1.2em;
-  }
 }
+
+.product-cards .color .rate i {
+  font-size: 1.2em;
+}
+
 
 .frame .product-cards .color .col1 {
   background-color: #259603;
@@ -721,15 +726,15 @@ main .special-offers {
   min-width: 300px;
   text-align: center;
   gap: 15px;
+}
 
-  span {
-    color: #259603;
-  }
+.special-offers .head span {
+  color: #259603;
+}
 
-  h2 {
-    font-size: 2em;
-    text-transform: uppercase;
-  }
+.special-offers .head h2 {
+  font-size: 2em;
+  text-transform: uppercase;
 }
 
 .special-offers .products {
@@ -766,12 +771,13 @@ main .special-offers {
   border-radius: 20px;
   overflow: hidden;
   position: relative;
-
-  img {
-    width: 100%;
-    transform: translateY(-40px) scale();
-  }
 }
+
+.special-offers .product-cards a img {
+  width: 100%;
+  transform: translateY(-40px) scale();
+}
+
 
 .special-offers .product-cards .rate {
   border-radius: 7px;
@@ -786,11 +792,12 @@ main .special-offers {
   justify-content: space-around;
   padding: 5px 12px;
   gap: 7px;
-
-  #rateCount {
-    font-weight: 400;
-  }
 }
+
+.special-offers .product-cards .rate #rateCount {
+  font-weight: 400;
+}
+
 
 .special-offers .product-cards .rate i {
   color: rgb(167, 167, 0);
@@ -801,12 +808,13 @@ main .special-offers {
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  p {
-    font-size: 15px;
-    color: rgb(110, 110, 110);
-  }
 }
+
+.special-offers .product-cards .text p {
+  font-size: 15px;
+  color: rgb(110, 110, 110);
+}
+
 
 .special-offers .product-cards .text name {
   display: flex;
@@ -814,11 +822,12 @@ main .special-offers {
   justify-content: space-between;
   align-items: stretch;
   gap: 5px;
-
-  h3 {
-    font-size: 16px;
-  }
 }
+
+.special-offers .product-cards .text name h3 {
+  font-size: 16px;
+}
+
 
 .special-offers .text #price span {
   text-decoration: line-through;
