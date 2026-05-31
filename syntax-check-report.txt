@@ -1,0 +1,15 @@
+C:\FULL STACK PROJECTS\node_modules\fontkit\src\CmapProcessor.js
+C:\FULL STACK PROJECTS\node_modules\fontkit\src\CmapProcessor.js:172   @cache   ^ System.Management.Automation.RemoteException SyntaxError: Invalid or unexpected token     at checkSyntax (node:internal/main/check_syntax:74:5) System.Management.Automation.RemoteException Node.js v22.16.0
+
+C:\FULL STACK PROJECTS\node_modules\fontkit\src\TTFFont.js
+C:\FULL STACK PROJECTS\node_modules\fontkit\src\TTFFont.js:252   @cache   ^ System.Management.Automation.RemoteException SyntaxError: Invalid or unexpected token     at checkSyntax (node:internal/main/check_syntax:74:5) System.Management.Automation.RemoteException Node.js v22.16.0
+
+C:\FULL STACK PROJECTS\node_modules\fontkit\src\aat\AATLookupTable.js
+C:\FULL STACK PROJECTS\node_modules\fontkit\src\aat\AATLookupTable.js:77   @cache   ^ System.Management.Automation.RemoteException SyntaxError: Invalid or unexpected token     at checkSyntax (node:internal/main/check_syntax:74:5) System.Management.Automation.RemoteException Node.js v22.16.0
+
+C:\FULL STACK PROJECTS\node_modules\fontkit\src\aat\AATMorxProcessor.js
+C:\FULL STACK PROJECTS\node_modules\fontkit\src\aat\AATMorxProcessor.js:107   @cache   ^ System.Management.Automation.RemoteException SyntaxError: Invalid or unexpected token     at checkSyntax (node:internal/main/check_syntax:74:5) System.Management.Automation.RemoteException Node.js v22.16.0
+
+C:\FULL STACK PROJECTS\node_modules\fontkit\src\glyph\Glyph.js
+C:\FULL STACK PROJECTS\node_modules\fontkit\src\glyph\Glyph.js:104   @cache   ^ System.Management.Automation.RemoteException SyntaxError: Invalid or unexpected token     at checkSyntax (node:internal/main/check_syntax:74:5) System.Management.Automation.RemoteException Node.js v22.16.0
+
