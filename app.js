@@ -100,9 +100,11 @@ mongoose
 
     console.log('MongoDB Connected');
 
-    app.listen(PORT, '0.0.0.0', () => {
+    app.listen(PORT, () => {
 
-      console.log(`Server running on port ${PORT}`);
+      console.log(
+        `Server running on http://localhost:${PORT}`
+      );
 
     });
 
