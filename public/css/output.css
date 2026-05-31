@@ -1,13 +1,28 @@
 /*! tailwindcss v4.2.2 | MIT License | https://tailwindcss.com */
 @layer properties;
+.fixed {
+  position: fixed;
+}
+.sticky {
+  position: sticky;
+}
 .block {
   display: block;
+}
+.hidden {
+  display: none;
 }
 .transform {
   transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
 }
 .resize {
   resize: both;
+}
+.lowercase {
+  text-transform: lowercase;
+}
+.uppercase {
+  text-transform: uppercase;
 }
 @property --tw-rotate-x {
   syntax: "*";
