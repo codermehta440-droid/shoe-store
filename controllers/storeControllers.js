@@ -1,4 +1,5 @@
 const { check, validationResult } = require("express-validator");
+const mongoose = require('mongoose');
 const User = require("../models/signup");
 
 const bcrypt = require('bcryptjs');
@@ -97,10 +98,14 @@ exports.getProDetails = async (req, res, next) => {
 
         const productId = req.params.productId;
 
+        if (!productId || !mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(404).send('Product not found');
+        }
+
         const foundProduct = await product.findById(productId);
 
         if (!foundProduct) {
-            return res.send("Product not found");
+            return res.status(404).send('Product not found');
         }
 
         res.render('store/productDetails', {
@@ -405,8 +410,8 @@ exports.postAddToCart = async (req, res, next) => {
 
         const productId = req.params.productId;
 
-        if (!productId) {
-            return res.status(400).send('Invalid request');
+        if (!productId || !mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(400).send('Invalid product ID');
         }
 
         const foundProduct = await product.findById(productId);
@@ -429,11 +434,11 @@ exports.postAddToCart = async (req, res, next) => {
         userData.cart = userData.cart || [];
 
         const existingProductIndex = userData.cart.findIndex(item => {
-            return item.productId.toString() === productId;
+            return item?.productId?.toString() === productId;
         });
 
         if (existingProductIndex >= 0) {
-            userData.cart[existingProductIndex].quantity = (userData.cart[existingProductIndex].quantity || 0) + 1;
+            userData.cart[existingProductIndex].quantity = (Number(userData.cart[existingProductIndex].quantity) || 0) + 1;
         } else {
             userData.cart.push({
                 productId: foundProduct._id,
@@ -460,8 +465,8 @@ exports.postBuyNow = async (req, res, next) => {
     try {
         const productId = req.params.productId;
 
-        if (!productId) {
-            return res.status(400).send('Invalid request');
+        if (!productId || !mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(400).send('Invalid product ID');
         }
 
         const foundProduct = await product.findById(productId);
@@ -480,9 +485,9 @@ exports.postBuyNow = async (req, res, next) => {
 
         userData.cart = userData.cart || [];
 
-        const existingProductIndex = userData.cart.findIndex(item => item.productId.toString() === productId);
+        const existingProductIndex = userData.cart.findIndex(item => item?.productId?.toString() === productId);
         if (existingProductIndex >= 0) {
-            userData.cart[existingProductIndex].quantity = (userData.cart[existingProductIndex].quantity || 0) + 1;
+            userData.cart[existingProductIndex].quantity = (Number(userData.cart[existingProductIndex].quantity) || 0) + 1;
         } else {
             userData.cart.push({
                 productId: foundProduct._id,
