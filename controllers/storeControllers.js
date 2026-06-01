@@ -91,9 +91,7 @@ exports.getSignup = (req, res, next) => {
 // get product details
 exports.getProDetails = async (req, res, next) => {
 
-    if (!req.session.isLoggedIn) {
-        return res.redirect('/login');
-    }
+    // allow guests to view product details (don't force login)
 
     try {
 
@@ -107,13 +105,14 @@ exports.getProDetails = async (req, res, next) => {
 
         res.render('store/productDetails', {
             product: foundProduct,
-            isLoggedIn: req.session.isLoggedIn,
-            isHostLoggedIn: req.session.isHostLoggedIn,
-            user: req.session.user
+            isLoggedIn: !!req.session.isLoggedIn,
+            isHostLoggedIn: !!req.session.isHostLoggedIn,
+            user: req.session.user || null
         });
 
     } catch (err) {
-        console.log(err);
+        console.error('getProDetails error:', err);
+        return res.status(500).send('Internal Server Error');
     }
 };
 
@@ -404,16 +403,21 @@ exports.postAddToCart = async (req, res, next) => {
 
     try {
 
-        if (!req.session.user) {
-            return res.redirect('/login');
-        }
-
         const productId = req.params.productId;
+
+        if (!productId) {
+            return res.status(400).send('Invalid request');
+        }
 
         const foundProduct = await product.findById(productId);
 
         if (!foundProduct) {
-            return res.send("Product not found");
+            return res.status(404).send('Product not found');
+        }
+
+        if (!req.session.user) {
+            // if user not logged in, redirect to login page
+            return res.redirect('/login');
         }
 
         const userData = await User.findById(req.session.user._id);
@@ -421,17 +425,16 @@ exports.postAddToCart = async (req, res, next) => {
         if (!userData) {
             return res.redirect('/login');
         }
+
+        userData.cart = userData.cart || [];
 
         const existingProductIndex = userData.cart.findIndex(item => {
             return item.productId.toString() === productId;
         });
 
         if (existingProductIndex >= 0) {
-
-            userData.cart[existingProductIndex].quantity += 1;
-
+            userData.cart[existingProductIndex].quantity = (userData.cart[existingProductIndex].quantity || 0) + 1;
         } else {
-
             userData.cart.push({
                 productId: foundProduct._id,
                 title: foundProduct.title,
@@ -440,30 +443,34 @@ exports.postAddToCart = async (req, res, next) => {
                 image: foundProduct.image,
                 quantity: 1
             });
-
         }
 
         await userData.save();
 
-        res.redirect('/cart');
+        return res.redirect('/cart');
 
     } catch (err) {
-        console.log(err);
+        console.error('postAddToCart error:', err);
+        return res.status(500).send('Internal Server Error');
     }
 
 };
 
 exports.postBuyNow = async (req, res, next) => {
     try {
-        if (!req.session.user) {
-            return res.redirect('/login');
+        const productId = req.params.productId;
+
+        if (!productId) {
+            return res.status(400).send('Invalid request');
         }
 
-        const productId = req.params.productId;
         const foundProduct = await product.findById(productId);
-
         if (!foundProduct) {
-            return res.send('Product not found');
+            return res.status(404).send('Product not found');
+        }
+
+        if (!req.session.user) {
+            return res.redirect('/login');
         }
 
         const userData = await User.findById(req.session.user._id);
@@ -471,9 +478,11 @@ exports.postBuyNow = async (req, res, next) => {
             return res.redirect('/login');
         }
 
+        userData.cart = userData.cart || [];
+
         const existingProductIndex = userData.cart.findIndex(item => item.productId.toString() === productId);
         if (existingProductIndex >= 0) {
-            userData.cart[existingProductIndex].quantity += 1;
+            userData.cart[existingProductIndex].quantity = (userData.cart[existingProductIndex].quantity || 0) + 1;
         } else {
             userData.cart.push({
                 productId: foundProduct._id,
@@ -486,9 +495,10 @@ exports.postBuyNow = async (req, res, next) => {
         }
 
         await userData.save();
-        res.redirect('/cart');
+        return res.redirect('/cart');
     } catch (err) {
-        console.log(err);
+        console.error('postBuyNow error:', err);
+        return res.status(500).send('Internal Server Error');
     }
 };
 
