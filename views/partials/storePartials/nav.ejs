@@ -8,7 +8,7 @@
 
     <!-- search -->
     <form action="/search" method="GET" class="search">
-      <input type="search" name="q" placeholder="Search your product" value="<%= query || '' %>" />
+      <input type="search" name="q" placeholder="Search your product" value="<%= (typeof query !== 'undefined' ? query : '') %>" />
       <button type="submit">
         <i class="ri-search-line"></i>
       </button>
@@ -121,7 +121,7 @@
     <!-- mobile menu -->
     <div class="mobile-menu">
       <form action="/search" method="GET" class="search mobile-search">
-        <input type="search" name="q" placeholder="Search your product" value="<%= query || '' %>" />
+        <input type="search" name="q" placeholder="Search your product" value="<%= (typeof query !== 'undefined' ? query : '') %>" />
         <button type="submit">
           <i class="ri-search-line"></i>
         </button>
