@@ -379,12 +379,14 @@ exports.getCartPage = async (req, res, next) => {
             return res.redirect('/login');
         }
 
-        const cartItems = userData.cart || [];
+        const cartItems = Array.isArray(userData.cart) ? userData.cart.filter(item => item && typeof item === 'object') : [];
 
         let totalPrice = 0;
 
         cartItems.forEach(item => {
-            totalPrice += item.price * item.quantity;
+            if (item && typeof item.price === 'number' && typeof item.quantity === 'number') {
+                totalPrice += item.price * item.quantity;
+            }
         });
 
         res.render('store/cartPage', {
@@ -399,7 +401,8 @@ exports.getCartPage = async (req, res, next) => {
         req.session.orderMessage = null;
 
     } catch (err) {
-        console.log(err);
+        console.error('getCartPage error:', err);
+        return res.status(500).send('Internal Server Error');
     }
 
 };
@@ -523,16 +526,19 @@ exports.getDeleteCartItem = async (req, res, next) => {
             return res.redirect('/login');
         }
 
-        userData.cart = userData.cart.filter(item => {
-            return item.productId.toString() !== productId;
-        });
+        if (Array.isArray(userData.cart)) {
+            userData.cart = userData.cart.filter(item => item && item.productId && item.productId.toString() !== productId);
+        } else {
+            userData.cart = [];
+        }
 
         await userData.save();
 
         res.redirect('/cart');
 
     } catch (err) {
-        console.log(err);
+        console.error('getDeleteCartItem error:', err);
+        return res.status(500).send('Internal Server Error');
     }
 
 };

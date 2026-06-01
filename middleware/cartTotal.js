@@ -10,12 +10,14 @@ module.exports = async (req, res, next) => {
 
             const userData = await User.findById(req.session.user._id);
 
-            if (userData && userData.cart) {
+            if (userData && Array.isArray(userData.cart)) {
 
                 let total = 0;
 
                 userData.cart.forEach(item => {
-                    total += item.price * item.quantity;
+                    if (item && typeof item.price === 'number' && typeof item.quantity === 'number') {
+                        total += item.price * item.quantity;
+                    }
                 });
 
                 res.locals.totalPrice = total;
@@ -28,7 +30,7 @@ module.exports = async (req, res, next) => {
 
     } catch (err) {
 
-        console.log(err);
+        console.error('cartTotal middleware error:', err);
         next();
 
     }
