@@ -270,10 +270,6 @@ nav .cart span {
 
 /* ===================== MOBILE MENU ===================== */
 
-.menu-toggle {
-    display: none;
-}
-
 .mobile-menu {
     width: 300px;
     background: #fff;

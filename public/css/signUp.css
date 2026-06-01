@@ -129,21 +129,8 @@ nav .search i {
 
 /* MOBILE MENU */
 
-.menu-toggle {
-    width: 45px;
-    height: 45px;
-    background: black;
-    border-radius: 12px;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
+/* menu-toggle styles are handled in Mix.css to avoid conflicts across pages */
 
-.menu-toggle i {
-    color: white;
-    font-size: 24px;
-}
 
 /* MAIN */
 
