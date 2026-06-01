@@ -2,11 +2,11 @@ const { check, validationResult } = require("express-validator");
 const User = require("../models/signup");
 
 const bcrypt = require('bcryptjs');
-const product = require("../models/product"); 
+const product = require("../models/product");
 const PDFDocument = require('pdfkit');
 
 const crypto = require('crypto');
-const transporter = require("../utils/mailer");
+const { sendMail } = require("../utils/mailer");
 
 exports.getHomes = async (req, res, next) => {
 
@@ -81,9 +81,9 @@ exports.postSignup = [
     check('fullName')
         .trim()
         .isLength({ min: 4 })
-        .withMessage("Name should be atleast 4 characters long")
+        .withMessage("Name should be at least 4 characters long")
         .matches(/^[A-Za-z\s]+$/)
-        .withMessage("First name should contain only alphabets"),
+        .withMessage("Name should contain only alphabets"),
 
     check('email')
         .isEmail()
@@ -92,139 +92,105 @@ exports.postSignup = [
 
     check('password')
         .isLength({ min: 8 })
-        .withMessage("Password should be at least 8 charcarter long")
-        .matches(/[A-Z]/)
-        .withMessage("Password should be contain atleast one uppercase letter")
-        .matches(/[a-z]/)
-        .withMessage("Password should be contain atleast one lowercase letter")
-        .matches(/[0-9]/)
-        .withMessage("Password should be contain atleast one number")
-        .matches(/[!@&]/)
-        .withMessage("Password should be contain atleast one special character")
+        .withMessage("Password should be at least 8 characters long")
+        .matches(/[A-Z]/).withMessage("Must contain uppercase letter")
+        .matches(/[a-z]/).withMessage("Must contain lowercase letter")
+        .matches(/[0-9]/).withMessage("Must contain a number")
+        .matches(/[!@&]/).withMessage("Must contain a special character")
         .trim(),
 
     check('confPass')
         .trim()
         .custom((value, { req }) => {
             if (value !== req.body.password) {
-                throw new Error("Password do not match")
+                throw new Error("Passwords do not match");
             }
             return true;
         }),
 
     async (req, res, next) => {
+        const { fullName, email, password, confPass } = req.body;
+
         try {
-
-            console.log('Getting user info', req.body);
-
-            const { fullName, email, password, confPass } = req.body;
-
             const errors = validationResult(req);
-
             if (!errors.isEmpty()) {
                 return res.status(422).render('auth/signup', {
-                    pageTitle: "Signup",
-                    currentPage: "Signup",
                     isLoggedIn: false,
                     isloginpage: false,
                     ishostloginpage: false,
-                    errors: errors.array().map(err => err.msg),
-                    oldInput: { fullName, email, password, confPass },
+                    errors: errors.array().map(e => e.msg),
+                    oldInput: { fullName, email, password, confPass }
                 });
             }
 
             const existingUser = await User.findOne({ email });
-
             if (existingUser) {
                 return res.status(422).render('auth/signup', {
-                    pageTitle: "Signup",
-                    currentPage: "Signup",
                     isLoggedIn: false,
                     isloginpage: false,
                     ishostloginpage: false,
                     errors: ["Email already exists"],
-                    oldInput: { fullName, email, password, confPass },
+                    oldInput: { fullName, email, password, confPass }
                 });
             }
 
             const hashedPassword = await bcrypt.hash(password, 12);
 
-            const token = crypto
-                .randomBytes(32)
-                .toString('hex');
+            const token = crypto.randomBytes(32).toString('hex');
 
-            const userinfo = new User({
-
+            const user = new User({
                 fullName,
-
                 email,
-
                 password: hashedPassword,
-
                 isVerified: false,
-
                 verifyToken: token,
-
-                verifyTokenExpiration:
-                    Date.now() + 24 * 60 * 60 * 1000
-
+                verifyTokenExpiration: Date.now() + 24 * 60 * 60 * 1000,
+                cart: [],
+                orders: []
             });
 
-            await userinfo.save();
+            await user.save();
 
-            const verifyLink =
-                `${process.env.BASE_URL}/verify-email/${token}`;
+            // send verification email asynchronously and don't block signup flow
+            try {
+                const verifyLink = `${process.env.BASE_URL}/verify-email/${token}`;
+                sendMail({
+                    to: email,
+                    subject: 'Verify Your Email',
+                    html: `
+                        <h2>Welcome ${fullName}</h2>
+                        <p>Click below to verify your email:</p>
+                        <a href="${verifyLink}">Verify Email</a>
+                        <p>This link expires in 24 hours.</p>
+                    `
+                }).catch(err => {
+                    console.error('Signup: email send failed (non-blocking):', err && err.message ? err.message : err);
+                });
+            } catch (mailErr) {
+                console.error('Signup: unexpected mailer error:', mailErr);
+            }
 
-            await transporter.sendMail({
-
-                from: process.env.EMAIL_USER,
-
-                to: email,
-
-                subject: 'Verify Your Email',
-
-                html: `
-
-        <h2>Welcome ${fullName}</h2>
-
-        <p>
-            Click below button
-            to verify your email.
-        </p>
-
-        <a href="${verifyLink}">
-            Verify Email
-        </a>
-
-        <p>
-            Link expires in 24 hours.
-        </p>
-
-    `
-            });
-
-            console.log("After Save");
-
+            // create session and redirect to home (signup succeeds even if email fails)
             req.session.isLoggedIn = true;
+            req.session.user = {
+                _id: user._id.toString(),
+                fullName,
+                email
+            };
 
-            return res.render('auth/login', {
-
-                isloginpage: true,
-                ishostloginpage: false,
-
-                error: [
-                    'Verification email sent. Please check your inbox.'
-                ],
-
-                oldInput: {
-                    email: '',
-                    password: ''
-                }
-
+            req.session.save(() => {
+                return res.redirect('/');
             });
 
         } catch (err) {
-            console.log(err);
+            console.error('Signup Error:', err);
+            return res.status(500).render('auth/signup', {
+                isLoggedIn: false,
+                isloginpage: false,
+                ishostloginpage: false,
+                errors: ["Something went wrong. Please try again later."],
+                oldInput: { fullName: req.body.fullName, email: req.body.email, password: '', confPass: '' }
+            });
         }
     }
 ];
@@ -276,58 +242,61 @@ exports.verifyEmail = async (req, res, next) => {
 };
 
 exports.postLogin = async (req, res, next) => {
-
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    try {
+        const user = await User.findOne({ email });
 
-    if (!user) {
-        return res.render('auth/login', {
-            isloginpage: true,
-            ishostloginpage: false,
-            error: ['Invalid email or password'],
-            oldInput: { email, password }
-        });
-    }
-
-    if (!user.isVerified) {
-        return res.render('auth/login', {
-            isloginpage: true,
-            ishostloginpage: false,
-            error: ['Please verify your email first'],
-            oldInput: { email, password }
-        });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-        return res.render('auth/login', {
-            isloginpage: true,
-            isLoggedIn: false,
-            isHostLoggedIn: false,
-            ishostloginpage: false,
-            error: ["Invalid password"],
-            oldInput: { email, password },
-        });
-    }
-
-    req.session.isLoggedIn = true;
-
-    req.session.user = {
-        _id: user._id.toString(),
-        fullName: user.fullName,
-        email: user.email
-    };
-
-    req.session.save((err) => {
-
-        if (err) {
-            console.log(err);
+        if (!user) {
+            return res.render('auth/login', {
+                isloginpage: true,
+                ishostloginpage: false,
+                error: ['Invalid email or password'],
+                oldInput: { email, password }
+            });
         }
 
-        res.redirect('/');
-    });
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.render('auth/login', {
+                isloginpage: true,
+                isLoggedIn: false,
+                isHostLoggedIn: false,
+                ishostloginpage: false,
+                error: ["Invalid password"],
+                oldInput: { email, password },
+            });
+        }
+
+        // login user even if email verification is pending; do not let email delivery issues block access
+        req.session.isLoggedIn = true;
+        req.session.user = {
+            _id: user._id.toString(),
+            fullName: user.fullName,
+            email: user.email,
+            isVerified: user.isVerified || false
+        };
+
+        // if not verified, set a one-time warning flag to show on UI
+        if (!user.isVerified) {
+            req.session.unverifiedEmail = true;
+        }
+
+        req.session.save((err) => {
+            if (err) console.error('Session save error on login:', err);
+            return res.redirect('/');
+        });
+
+    } catch (err) {
+        console.error('Login Error:', err);
+        return res.status(500).render('auth/login', {
+            isloginpage: true,
+            ishostloginpage: false,
+            error: ['Unable to login. Please try again later.'],
+            oldInput: { email: req.body.email, password: '' }
+        });
+    }
 };
 
 exports.postLogout = (req, res, next) => {
@@ -681,10 +650,11 @@ exports.getForgotPassword = (req, res) => {
 exports.postForgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
+        console.log('POST /forgot-password received for', email);
         const user = await User.findOne({ email });
 
-        // CRITICAL FIX: Add "return" here so code stops executing if user doesn't exist
         if (!user) {
+            console.log('Forgot password: no user found for', email);
             return res.render('auth/forgotPassword', {
                 isLoggedIn: false,
                 isloginpage: false,
@@ -695,8 +665,7 @@ exports.postForgotPassword = async (req, res) => {
             });
         }
 
-        // Yeh code tabhi chalega jab user sach mein exist karta ho
-        const token = crypto.randomBytes(32).toString("hex");
+        const token = crypto.randomBytes(32).toString('hex');
         user.resetToken = token;
         user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
 
@@ -704,10 +673,10 @@ exports.postForgotPassword = async (req, res) => {
 
         const resetLink = `${process.env.BASE_URL}/reset-password/${token}`;
 
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
+        console.log('Sending reset email to', user.email);
+        await sendMail({
             to: user.email,
-            subject: "Password Reset Request",
+            subject: 'Password Reset Request',
             html: `
                 <h2>Password Reset</h2>
                 <p>Click below link to reset password:</p>
@@ -716,7 +685,8 @@ exports.postForgotPassword = async (req, res) => {
             `
         });
 
-        res.render('auth/forgotPassword', {
+        console.log('Reset email sent successfully to', user.email);
+        return res.render('auth/forgotPassword', {
             isLoggedIn: false,
             isloginpage: false,
             ishostloginpage: false,
@@ -726,9 +696,15 @@ exports.postForgotPassword = async (req, res) => {
         });
 
     } catch (err) {
-        console.log(err);
-        // Catch block fix: Safe fallback taaki server hang na ho agar koi mail send hone mein dikkat aaye
-        res.status(500).send("Something went wrong on the server.");
+        console.error('Forgot password error:', err);
+        return res.render('auth/forgotPassword', {
+            isLoggedIn: false,
+            isloginpage: false,
+            ishostloginpage: false,
+            error: ['Unable to send reset email. Please try again later.'],
+            success: null,
+            oldInput: { email: req.body.email }
+        });
     }
 };
 

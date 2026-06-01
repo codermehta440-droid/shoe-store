@@ -59,52 +59,59 @@ exports.getLogin = (req, res, next) => {
 }
 
 exports.postLogin = async (req, res, next) => {
-
     const { name, email, password } = req.body;
 
-    const host = await Host.findOne({ email });
+    try {
+        const host = await Host.findOne({ email });
 
-    if (!host) {
-        return res.render('host/hostLogin', {
-            ishostloginpage: true,
-            isloginpage: false,
-            host: req.session.host,
-            error: ["Host not found"],
-            oldInput: { name, email, password },
-        });
-    }
-
-    const isMatch = await bcrypt.compare(password, host.password);
-
-    if (!isMatch) {
-        return res.render('host/hostLogin', {
-            ishostloginpage: true,
-            isloginpage: false,
-            host: req.session.host,
-            error: ["Invalid password"],
-            oldInput: { name, email, password },
-        });
-    }
-
-    req.session.isHostLoggedIn = true;
-    req.session.isLoggedIn = true;
-
-    req.session.host = {
-        _id: host._id.toString(),
-        name: host.name,
-        email: host.email
-    };
-
-    console.log(req.session.host);
-
-    req.session.save((err) => {
-
-        if (err) {
-            console.log(err);
+        if (!host) {
+            return res.render('host/hostLogin', {
+                ishostloginpage: true,
+                isloginpage: false,
+                host: req.session.host,
+                error: ["Host not found"],
+                oldInput: { name, email, password },
+            });
         }
 
-        res.redirect('/');
-    });
+        const isMatch = await bcrypt.compare(password, host.password);
+
+        if (!isMatch) {
+            return res.render('host/hostLogin', {
+                ishostloginpage: true,
+                isloginpage: false,
+                host: req.session.host,
+                error: ["Invalid password"],
+                oldInput: { name, email, password },
+            });
+        }
+
+        req.session.isHostLoggedIn = true;
+        req.session.isLoggedIn = true;
+
+        req.session.host = {
+            _id: host._id.toString(),
+            name: host.name,
+            email: host.email
+        };
+
+        console.log(req.session.host);
+
+        req.session.save((err) => {
+            if (err) console.error('Session save error for host login:', err);
+            return res.redirect('/');
+        });
+
+    } catch (err) {
+        console.error('Host login error:', err);
+        return res.status(500).render('host/hostLogin', {
+            ishostloginpage: true,
+            isloginpage: false,
+            host: req.session.host,
+            error: ['Unable to login. Please try again later.'],
+            oldInput: { name: req.body.name, email: req.body.email, password: '' }
+        });
+    }
 };
 
 exports.postAddProduct = async (req, res, next) => {
