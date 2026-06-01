@@ -9,12 +9,67 @@ const crypto = require('crypto');
 const { sendMail } = require("../utils/mailer");
 
 exports.getHomes = async (req, res, next) => {
+    try {
+        const query = (req.query.q || '').trim();
 
-    const specialProducts = await product.find({
-        isSpecialOffer: true
-    });
+        const specialProducts = await product.find({
+            isSpecialOffer: true
+        });
 
-    res.render('store/home', { specialProducts, editing: false, isLoggedIn: req.session.isLoggedIn, user: req.session.user, isHostLoggedIn: req.session.isHostLoggedIn, host: req.session.host });
+        const popularProducts = await product.find().limit(8);
+
+        res.render('store/home', {
+            specialProducts,
+            popularProducts,
+            query,
+            editing: false,
+            isLoggedIn: req.session.isLoggedIn,
+            user: req.session.user,
+            isHostLoggedIn: req.session.isHostLoggedIn,
+            host: req.session.host
+        });
+    } catch (err) {
+        console.error('Home page error:', err);
+        res.render('store/home', {
+            specialProducts: [],
+            popularProducts: [],
+            query: '',
+            editing: false,
+            isLoggedIn: req.session.isLoggedIn,
+            user: req.session.user,
+            isHostLoggedIn: req.session.isHostLoggedIn,
+            host: req.session.host
+        });
+    }
+};
+
+exports.getSearchResults = async (req, res, next) => {
+    try {
+        const query = (req.query.q || '').trim();
+
+        let products = [];
+        if (query) {
+            products = await product.find({
+                $or: [
+                    { title: { $regex: query, $options: 'i' } },
+                    { description: { $regex: query, $options: 'i' } },
+                    { category: { $regex: query, $options: 'i' } }
+                ]
+            });
+        }
+
+        res.render('store/search', {
+            query,
+            products,
+            isLoggedIn: req.session.isLoggedIn,
+            isHostLoggedIn: req.session.isHostLoggedIn,
+            user: req.session.user,
+            host: req.session.host
+        });
+    } catch (err) {
+        console.error('Search error:', err);
+        res.redirect('/');
+    }
 };
 
 exports.getSignup = (req, res, next) => {
@@ -349,6 +404,10 @@ exports.postAddToCart = async (req, res, next) => {
 
     try {
 
+        if (!req.session.user) {
+            return res.redirect('/login');
+        }
+
         const productId = req.params.productId;
 
         const foundProduct = await product.findById(productId);
@@ -358,6 +417,10 @@ exports.postAddToCart = async (req, res, next) => {
         }
 
         const userData = await User.findById(req.session.user._id);
+
+        if (!userData) {
+            return res.redirect('/login');
+        }
 
         const existingProductIndex = userData.cart.findIndex(item => {
             return item.productId.toString() === productId;
@@ -390,13 +453,60 @@ exports.postAddToCart = async (req, res, next) => {
 
 };
 
+exports.postBuyNow = async (req, res, next) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect('/login');
+        }
+
+        const productId = req.params.productId;
+        const foundProduct = await product.findById(productId);
+
+        if (!foundProduct) {
+            return res.send('Product not found');
+        }
+
+        const userData = await User.findById(req.session.user._id);
+        if (!userData) {
+            return res.redirect('/login');
+        }
+
+        const existingProductIndex = userData.cart.findIndex(item => item.productId.toString() === productId);
+        if (existingProductIndex >= 0) {
+            userData.cart[existingProductIndex].quantity += 1;
+        } else {
+            userData.cart.push({
+                productId: foundProduct._id,
+                title: foundProduct.title,
+                description: foundProduct.description,
+                price: foundProduct.price,
+                image: foundProduct.image,
+                quantity: 1
+            });
+        }
+
+        await userData.save();
+        res.redirect('/cart');
+    } catch (err) {
+        console.log(err);
+    }
+};
+
 exports.getDeleteCartItem = async (req, res, next) => {
 
     try {
 
+        if (!req.session.user) {
+            return res.redirect('/login');
+        }
+
         const productId = req.params.productId;
 
         const userData = await User.findById(req.session.user._id);
+
+        if (!userData) {
+            return res.redirect('/login');
+        }
 
         userData.cart = userData.cart.filter(item => {
             return item.productId.toString() !== productId;
@@ -416,9 +526,13 @@ exports.postPlaceOrder = async (req, res, next) => {
 
     try {
 
+        if (!req.session.user) {
+            return res.redirect('/login');
+        }
+
         const userData = await User.findById(req.session.user._id);
 
-        if (!userData || userData.cart.length === 0) {
+        if (!userData || !userData.cart || userData.cart.length === 0) {
             return res.redirect('/cart');
         }
 

@@ -61,6 +61,11 @@ nav .search {
   border-radius: 10px;
   overflow: hidden;
   position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+nav .search:focus-within {
+  box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.12);
 }
 
 nav .search input {
@@ -73,13 +78,33 @@ nav .search input {
   font-size: 15px;
 }
 
+nav .search input::placeholder {
+  color: #8a8a8a;
+}
+
 nav .search i {
   position: absolute;
   top: 50%;
   right: 20px;
   transform: translateY(-50%);
   font-size: 22px;
+  color: #111;
+  pointer-events: none;
+}
+
+nav .search button {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
   cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
 }
 
 nav .log-sign {
@@ -285,6 +310,69 @@ nav .cart span {
   display: none;
 }
 
+@media (max-width: 992px) {
+  nav .upper {
+    flex-wrap: wrap;
+    padding: 18px 5%;
+    gap: 15px;
+  }
+
+  nav .search {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  nav .log-sign,
+  nav .cart-track {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  nav .lower {
+    flex-wrap: wrap;
+    padding: 16px 5%;
+    gap: 15px;
+  }
+
+  nav .links {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .mobile-menu {
+    right: 5%;
+    width: calc(100% - 40px);
+  }
+}
+
+@media (max-width: 768px) {
+  nav .lower {
+    display: none;
+  }
+
+  .mobile-menu {
+    width: calc(100% - 32px);
+    right: 16px;
+    left: 16px;
+  }
+
+  .mobile-menu .links {
+    gap: 15px;
+  }
+}
+
 .mobile-menu {
   width: 300px;
   background: #fff;
@@ -324,6 +412,19 @@ nav .cart span {
 
 .mobile-menu button a {
   color: #fff;
+}
+
+.mobile-menu .search {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.mobile-menu .search input {
+  padding: 0 50px 0 18px;
+}
+
+.mobile-menu .search button {
+  right: 16px;
 }
 
 /* ===================== HERO SECTION ===================== */

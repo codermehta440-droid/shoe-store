@@ -7,6 +7,7 @@ storeRouter.get('/', storeControllers.getHomes);
 
 storeRouter.get('/signup', storeControllers.getSignup);
 storeRouter.get('/login', storeControllers.getLogin);
+storeRouter.get('/search', storeControllers.getSearchResults);
 storeRouter.get('/details/:productId', storeControllers.getProDetails)
 
 
@@ -17,6 +18,7 @@ storeRouter.post('/logout', storeControllers.postLogout)
 // CART ROUTES
 // storeRouter.get('/cart/:productId', storeControllers.getCartPage);
 storeRouter.post('/cart/add/:productId', storeControllers.postAddToCart);
+storeRouter.post('/cart/buy-now/:productId', storeControllers.postBuyNow);
 storeRouter.get('/cart', storeControllers.getCartPage);
 storeRouter.get('/cart/delete/:productId', storeControllers.getDeleteCartItem);
 

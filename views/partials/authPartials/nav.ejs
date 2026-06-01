@@ -3,6 +3,13 @@
     <img src="/images/logo.png" alt="logo" />
   </div>
 
+  <form action="/search" method="GET" class="search">
+    <input type="search" name="q" placeholder="Search your product" value="<%= query || '' %>" />
+    <button type="submit">
+      <i class="ri-search-line"></i>
+    </button>
+  </form>
+
 <% if(!isloginpage && !ishostloginpage){ %>
 
   <button class="login-btn-nav">
@@ -25,6 +32,21 @@
 
   <!-- MOBILE MENU -->
   <div class="menu-toggle">
-    <i class="ri-menu-3-line"></i>  
+    <i class="ri-menu-3-line"></i>
+  </div>
+
+  <div class="mobile-menu">
+    <form action="/search" method="GET" class="search mobile-search">
+      <input type="search" name="q" placeholder="Search your product" value="<%= query || '' %>" />
+      <button type="submit">
+        <i class="ri-search-line"></i>
+      </button>
+    </form>
+
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="/login">Login</a>
+      <a href="/signup">Signup</a>
+    </div>
   </div>
 </nav>

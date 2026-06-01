@@ -5,50 +5,22 @@ const confirmPassword = document.querySelector("#confirmPassword");
 const togglePassword = document.querySelector(".toggle-password");
 const toggleConfirm = document.querySelector(".toggle-confirm");
 
-const menuToggle = document.querySelector(".menu-toggle");
-const navLinks = document.querySelector(".links");
-
 /* PASSWORD TOGGLE */
 if (togglePassword && passwordInput) {
   togglePassword.addEventListener("click", () => {
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      togglePassword.classList.remove("ri-eye-off-line");
-      togglePassword.classList.add("ri-eye-line");
-    } else {
-      passwordInput.type = "password";
-      togglePassword.classList.remove("ri-eye-line");
-      togglePassword.classList.add("ri-eye-off-line");
-    }
+    const isHidden = passwordInput.type === "password";
+    passwordInput.type = isHidden ? "text" : "password";
+    togglePassword.classList.toggle("ri-eye-off-line", !isHidden);
+    togglePassword.classList.toggle("ri-eye-line", isHidden);
   });
 }
 
 /* CONFIRM PASSWORD */
 if (toggleConfirm && confirmPassword) {
   toggleConfirm.addEventListener("click", () => {
-    if (confirmPassword.type === "password") {
-      confirmPassword.type = "text";
-      toggleConfirm.classList.remove("ri-eye-off-line");
-      toggleConfirm.classList.add("ri-eye-line");
-    } else {
-      confirmPassword.type = "password";
-      toggleConfirm.classList.remove("ri-eye-line");
-      toggleConfirm.classList.add("ri-eye-off-line");
-    }
-  });
-}
-
-/* MOBILE MENU */
-if (menuToggle && navLinks) {
-  menuToggle.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
-  });
-
-  /* OUTSIDE CLICK */
-  document.addEventListener("click", (e) => {
-    if (!menuToggle || !navLinks) return;
-    if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
-      navLinks.classList.remove("active");
-    }
+    const isHidden = confirmPassword.type === "password";
+    confirmPassword.type = isHidden ? "text" : "password";
+    toggleConfirm.classList.toggle("ri-eye-off-line", !isHidden);
+    toggleConfirm.classList.toggle("ri-eye-line", isHidden);
   });
 }

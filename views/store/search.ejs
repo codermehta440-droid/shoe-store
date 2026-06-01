@@ -1,0 +1,125 @@
+<%- include('../partials/storePartials/head') %>
+  <body>
+    <%- include('../partials/storePartials/nav') %>
+
+    <main>
+      <section class="search-results" style="padding: 60px 7%;">
+        <div class="search-results__head">
+          <h2>Search results for "<%= query %>"</h2>
+          <p><%= products.length %> item<%= products.length === 1 ? '' : 's' %> found</p>
+        </div>
+
+        <% if (!query) { %>
+          <div class="empty-state">
+            <p>Please enter a search term in the navigation search bar.</p>
+          </div>
+        <% } else if (products.length === 0) { %>
+          <div class="empty-state">
+            <p>No products match your search. Try another keyword.</p>
+          </div>
+        <% } else { %>
+          <div class="product-grid">
+            <% products.forEach((product) => { %>
+              <div class="product-card">
+                <a href="/details/<%= product._id %>">
+                  <div class="img">
+                    <img src="<%= product.image %>" alt="<%= product.title %>" />
+                  </div>
+                </a>
+                <div class="product-info">
+                  <h3><%= product.title %></h3>
+                  <p class="price">₹<%= product.price %></p>
+                  <p class="category"><%= product.category %></p>
+                  <p class="description"><%= product.description %></p>
+                  <a class="btn" href="/details/<%= product._id %>">View Details</a>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </section>
+    </main>
+
+    <style>
+      .search-results__head {
+        margin-bottom: 30px;
+      }
+      .search-results__head h2 {
+        font-size: 34px;
+        margin-bottom: 8px;
+      }
+      .search-results__head p {
+        color: #555;
+      }
+      .empty-state {
+        padding: 40px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        text-align: center;
+        color: #333;
+      }
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .product-card {
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+      }
+      .product-card .img {
+        min-height: 220px;
+        position: relative;
+      }
+      .product-card .img img {
+        object-fit: cover;
+        height: 100%;
+      }
+      .product-info {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .product-info h3 {
+        font-size: 20px;
+      }
+      .price {
+        font-weight: 700;
+        color: #111;
+      }
+      .category {
+        color: #777;
+        font-size: 14px;
+      }
+      .description {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .btn {
+        display: inline-block;
+        margin-top: auto;
+        padding: 12px 18px;
+        border-radius: 12px;
+        background: #111;
+        color: #fff;
+      }
+      @media (max-width: 900px) {
+        .product-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 650px) {
+        .product-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </body>
+</html>
