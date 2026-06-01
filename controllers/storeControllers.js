@@ -368,18 +368,18 @@ exports.postLogout = (req, res, next) => {
 exports.getCartPage = async (req, res, next) => {
 
     try {
+        let cartItems = [];
+        let userData = null;
 
-        if (!req.session.user) {
-            return res.redirect('/login');
+        if (req.session.user && req.session.user._id) {
+            userData = await User.findById(req.session.user._id);
         }
 
-        const userData = await User.findById(req.session.user._id);
-
-        if (!userData) {
-            return res.redirect('/login');
+        if (userData) {
+            cartItems = Array.isArray(userData.cart) ? userData.cart.filter(item => item && typeof item === 'object') : [];
+        } else {
+            cartItems = Array.isArray(req.session.guestCart) ? req.session.guestCart.filter(item => item && typeof item === 'object') : [];
         }
-
-        const cartItems = Array.isArray(userData.cart) ? userData.cart.filter(item => item && typeof item === 'object') : [];
 
         let totalPrice = 0;
 
@@ -423,22 +423,55 @@ exports.postAddToCart = async (req, res, next) => {
             return res.status(404).send('Product not found');
         }
 
-        if (!req.session.user) {
-            // if user not logged in, redirect to login page
-            return res.redirect('/login');
+        if (!req.session.user || !req.session.user._id) {
+            req.session.guestCart = req.session.guestCart || [];
+            const existingIndex = req.session.guestCart.findIndex(item => item && item.productId === productId);
+
+            if (existingIndex >= 0) {
+                req.session.guestCart[existingIndex].quantity = (Number(req.session.guestCart[existingIndex].quantity) || 0) + 1;
+            } else {
+                req.session.guestCart.push({
+                    productId: productId,
+                    title: foundProduct.title,
+                    description: foundProduct.description,
+                    price: foundProduct.price,
+                    image: foundProduct.image,
+                    quantity: 1
+                });
+            }
+
+            return req.session.save(() => {
+                return res.redirect('/cart');
+            });
         }
 
         const userData = await User.findById(req.session.user._id);
 
         if (!userData) {
-            return res.redirect('/login');
+            req.session.guestCart = req.session.guestCart || [];
+            const existingIndex = req.session.guestCart.findIndex(item => item && item.productId === productId);
+
+            if (existingIndex >= 0) {
+                req.session.guestCart[existingIndex].quantity = (Number(req.session.guestCart[existingIndex].quantity) || 0) + 1;
+            } else {
+                req.session.guestCart.push({
+                    productId: productId,
+                    title: foundProduct.title,
+                    description: foundProduct.description,
+                    price: foundProduct.price,
+                    image: foundProduct.image,
+                    quantity: 1
+                });
+            }
+
+            return req.session.save(() => {
+                return res.redirect('/cart');
+            });
         }
 
         userData.cart = userData.cart || [];
 
-        const existingProductIndex = userData.cart.findIndex(item => {
-            return item?.productId?.toString() === productId;
-        });
+        const existingProductIndex = userData.cart.findIndex(item => item?.productId?.toString() === productId);
 
         if (existingProductIndex >= 0) {
             userData.cart[existingProductIndex].quantity = (Number(userData.cart[existingProductIndex].quantity) || 0) + 1;
@@ -514,27 +547,25 @@ exports.getDeleteCartItem = async (req, res, next) => {
 
     try {
 
-        if (!req.session.user) {
-            return res.redirect('/login');
-        }
-
         const productId = req.params.productId;
 
-        const userData = await User.findById(req.session.user._id);
-
-        if (!userData) {
-            return res.redirect('/login');
-        }
-
-        if (Array.isArray(userData.cart)) {
-            userData.cart = userData.cart.filter(item => item && item.productId && item.productId.toString() !== productId);
+        if (req.session.user && req.session.user._id) {
+            const userData = await User.findById(req.session.user._id);
+            if (userData) {
+                if (Array.isArray(userData.cart)) {
+                    userData.cart = userData.cart.filter(item => item && item.productId && item.productId.toString() !== productId);
+                } else {
+                    userData.cart = [];
+                }
+                await userData.save();
+            }
         } else {
-            userData.cart = [];
+            req.session.guestCart = Array.isArray(req.session.guestCart)
+                ? req.session.guestCart.filter(item => item && item.productId !== productId)
+                : [];
         }
 
-        await userData.save();
-
-        res.redirect('/cart');
+        return res.redirect('/cart');
 
     } catch (err) {
         console.error('getDeleteCartItem error:', err);

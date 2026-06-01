@@ -26,6 +26,16 @@ module.exports = async (req, res, next) => {
 
         }
 
+        else if (Array.isArray(req.session.guestCart)) {
+            let total = 0;
+            req.session.guestCart.forEach(item => {
+                if (item && typeof item.price === 'number' && typeof item.quantity === 'number') {
+                    total += item.price * item.quantity;
+                }
+            });
+            res.locals.totalPrice = total;
+        }
+
         next();
 
     } catch (err) {
