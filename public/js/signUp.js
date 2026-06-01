@@ -69,12 +69,12 @@ if (passwordInput && confirmPassword && togglePassword && toggleConfirm && menuT
     // Only run outside-click logic if both elements exist
     if (!menuToggle || !navLinks) return;
 
-    if (
-      !menuToggle.contains(e.target) &&
-      !navLinks.contains(e.target)
-    ) {
-      navLinks.classList.remove("active");
-    }
+    // if (
+    //   // !menuToggle.contains(e.target) &&
+    //   // // !navLinks.contains(e.target)
+    // ) {
+    //   navLinks.classList.remove("active");
+    // }
 
   });
 }
