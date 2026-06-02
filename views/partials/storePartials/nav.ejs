@@ -113,66 +113,67 @@
     </a>
   </div>
 
-    <!-- mobile icon -->
-    <div class="menu-toggle">
-      <i class="ri-menu-3-line"></i>
+    
+  </div>
+  <!-- mobile icon (moved out so it's visible when .lower is hidden on small screens) -->
+  <div class="menu-toggle">
+    <i class="ri-menu-3-line"></i>
+  </div>
+
+  <!-- mobile menu (moved out of .lower) -->
+  <div class="mobile-menu">
+    <form action="/search" method="GET" class="search mobile-search">
+      <input type="search" name="q" placeholder="Search your product" value="<%= (typeof query !== 'undefined' ? query : '') %>" />
+      <button type="submit">
+        <i class="ri-search-line"></i>
+      </button>
+    </form>
+
+    <div class="links">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Products</a>
+      <a href="#">Shoes</a>
     </div>
 
-    <!-- mobile menu -->
-    <div class="mobile-menu">
-      <form action="/search" method="GET" class="search mobile-search">
-        <input type="search" name="q" placeholder="Search your product" value="<%= (typeof query !== 'undefined' ? query : '') %>" />
-        <button type="submit">
-          <i class="ri-search-line"></i>
-        </button>
-      </form>
+      <% if(!isLoggedIn){ %>
 
-      <div class="links">
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Products</a>
-        <a href="#">Shoes</a>
-      </div>
+        <button><a href="/login">Login</a></button>
+        <button><a href="/signup">Signup</a></button>
 
-        <% if(!isLoggedIn){ %>
+      <% } else if(isHostLoggedIn) { %>
 
-          <button><a href="/login">Login</a></button>
-          <button><a href="/signup">Signup</a></button>
+        <div class="user-section">
+          <span><%= host.name %></span>
+          <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+          </form>
+        </div>
 
-        <% } else if(isHostLoggedIn) { %>
+      <% } else { %>
 
-          <div class="user-section">
-            <span><%= host.name %></span>
-            <form action="/logout" method="POST">
-              <button type="submit">Logout</button>
-            </form>
-          </div>
+        <div class="user-section">
+          <span><%= user.fullName %></span>
+          <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+          </form>
+        </div>
 
-        <% } else { %>
+      <% } %>
 
-          <div class="user-section">
-            <span><%= user.fullName %></span>
-            <form action="/logout" method="POST">
-              <button type="submit">Logout</button>
-            </form>
-          </div>
+    <div class="cart">
+      <span>
+        <i class="ri-shopping-cart-2-line"></i>
+        Cart
+      </span>
 
-        <% } %>
-
-      <div class="cart">
-        <span>
-          <i class="ri-shopping-cart-2-line"></i>
-          Cart
-        </span>
-
-        <select>
-          <option>India</option>
-          <option>USA</option>
-        </select>
-      </div>
-
-  <button><a href="/login">Login</a></button>
-  <button><a href="/signup">Signup</a></button>
+      <select>
+        <option>India</option>
+        <option>USA</option>
+      </select>
     </div>
+
+    <button><a href="/login">Login</a></button>
+    <button><a href="/signup">Signup</a></button>
   </div>
 </nav>
