@@ -147,8 +147,8 @@
 
       <% if(!isLoggedIn){ %>
 
-        <button><a href="/login">Login</a></button>
-        <button><a href="/signup">Signup</a></button>
+        <a class="mobile-btn" href="/login">Login</a>
+        <a class="mobile-btn secondary" href="/signup">Signup</a>
 
       <% } else if(isHostLoggedIn) { %>
 
@@ -181,8 +181,5 @@
         <option>USA</option>
       </select>
     </div>
-
-    <button><a href="/login">Login</a></button>
-    <button><a href="/signup">Signup</a></button>
   </div>
 </nav>
