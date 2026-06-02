@@ -35,20 +35,22 @@ const mobileMenu = document.querySelector(".mobile-menu");
 // ===============================
 // CATEGORY TOGGLE
 // ===============================
-categoryBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  categoryMenu.classList.toggle("active");
-});
+if (categoryBtn && categoryMenu) {
+  categoryBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    categoryMenu.classList.toggle("active");
+  });
 
-// OUTSIDE CLICK HIDE CATEGORY
-document.addEventListener("click", (e) => {
-  if (
-    !categoryMenu.contains(e.target) &&
-    !categoryBtn.contains(e.target)
-  ) {
-    categoryMenu.classList.remove("active");
-  }
-});
+  // OUTSIDE CLICK HIDE CATEGORY
+  document.addEventListener("click", (e) => {
+    if (
+      !categoryMenu.contains(e.target) &&
+      !categoryBtn.contains(e.target)
+    ) {
+      categoryMenu.classList.remove("active");
+    }
+  });
+}
 
 // ===============================
 // NAVBAR SCROLL EFFECT
@@ -164,20 +166,22 @@ window.addEventListener("scroll", () => {
 // ===============================
 // MOBILE MENU TOGGLE
 // ===============================
-menuToggle.addEventListener("click", (e) => {
-  e.stopPropagation();
-  mobileMenu.classList.toggle("active");
-});
+if (menuToggle && mobileMenu) {
+  menuToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    mobileMenu.classList.toggle("active");
+  });
 
-// OUTSIDE CLICK CLOSE MOBILE MENU
-document.addEventListener("click", (e) => {
-  if (
-    !mobileMenu.contains(e.target) &&
-    !menuToggle.contains(e.target)
-  ) {
-    mobileMenu.classList.remove("active");
-  }
-});
+  // OUTSIDE CLICK CLOSE MOBILE MENU
+  document.addEventListener("click", (e) => {
+    if (
+      !mobileMenu.contains(e.target) &&
+      !menuToggle.contains(e.target)
+    ) {
+      mobileMenu.classList.remove("active");
+    }
+  });
+}
 
 // ===============================
 // WINDOW RESIZE RESET
