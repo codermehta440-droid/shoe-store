@@ -354,15 +354,17 @@ nav .cart span {
   /* move hamburger to left and reduce its size on smaller screens */
   .menu-toggle {
     position: absolute;
-    left: 16px;
+    right: 16px;
     top: 18px;
-    width: 42px;
-    height: 42px;
+    width: 50px;
+    height: 50px;
     border-radius: 10px;
+    z-index: 1002;
   }
 
   .menu-toggle i {
-    font-size: 18px;
+    font-size: 30px;
+    line-height: 1;
   }
 
   .mobile-menu {
@@ -393,6 +395,7 @@ nav .cart span {
   position: absolute;
   top: 100%;
   right: 7%;
+  z-index: 1001;
   padding: 25px;
   border-radius: 15px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
