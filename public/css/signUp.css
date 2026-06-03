@@ -599,3 +599,120 @@ form {
     }
 
 }
+
+
+/* ========================= */
+/* MOBILE FIX */
+/* ========================= */
+
+html,
+body {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+@media (max-width: 950px) {
+
+    main {
+        display: block;
+        padding: 20px 10px;
+        min-height: auto;
+    }
+
+    .signup-container {
+        width: 100%;
+        min-height: auto;
+        height: auto;
+        margin: 0 auto;
+        border-radius: 20px;
+    }
+
+    .left-side,
+    .right-side {
+        width: 100%;
+    }
+
+    .right-side {
+        padding: 35px 20px;
+    }
+
+    .content h1 {
+        font-size: 40px;
+        line-height: 50px;
+    }
+}
+
+@media (max-width: 650px) {
+
+    .left-side {
+        display: none;
+    }
+
+    .right-side {
+        width: 100%;
+        padding: 25px 15px;
+    }
+
+    .signup-container {
+        width: 100%;
+        border-radius: 15px;
+        box-shadow: none;
+    }
+
+    .form-head h2 {
+        font-size: 28px;
+    }
+
+    .form-head p {
+        font-size: 14px;
+    }
+
+    .input-field {
+        height: 55px;
+    }
+
+    .input-field input {
+        font-size: 16px;
+    }
+
+    .signup-btn {
+        height: 58px;
+        font-size: 15px;
+    }
+
+    .social-login {
+        flex-direction: column;
+    }
+
+    .social-login button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 450px) {
+
+    main {
+        padding: 10px;
+    }
+
+    .right-side {
+        padding: 20px 12px;
+    }
+
+    .form-head h2 {
+        font-size: 24px;
+    }
+
+    .input-box label {
+        font-size: 14px;
+    }
+
+    .remember span {
+        font-size: 13px;
+    }
+
+    .create-account p {
+        font-size: 14px;
+    }
+}

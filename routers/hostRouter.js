@@ -3,6 +3,22 @@ const express = require('express');
 const hostRouter = express.Router();
 
 const hostControllers = require('../controllers/hostControllers');
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: "public/uploads",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  }
+});
+
+const upload = multer({ storage });
+
+hostRouter.post(
+  "/host/add-product",
+  upload.single("productImage"),
+  hostControllers.postAddProduct
+);
 
 hostRouter.get('/', hostControllers.getHostHomes)
 hostRouter.get('/add-product', hostControllers.getAddProduct);

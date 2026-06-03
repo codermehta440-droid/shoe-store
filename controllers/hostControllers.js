@@ -2,6 +2,29 @@ const Product = require('../models/product');
 const bcrypt = require('bcryptjs');
 const Host = require('../models/hostlogin')
 
+exports.postAddProduct = (req, res) => {
+
+    let imageUrl = req.body.image;
+
+    if (req.file) {
+        imageUrl = "/uploads/" + req.file.filename;
+    }
+
+    const product = {
+        title: req.body.title,
+        price: req.body.price,
+        category: req.body.category,
+        image: imageUrl,
+        description: req.body.description
+    };
+
+    console.log(product);
+
+    // Save product in DB
+
+    res.redirect("/host/products");
+};
+
 exports.getHostHomes = (req, res, next) => {
     res.render('store/home', {
         editing: false,

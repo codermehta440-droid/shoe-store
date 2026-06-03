@@ -112,3 +112,49 @@ body {
     }
 
 }
+
+
+/* drag and drop */
+.drop-zone {
+    width: 100%;
+    min-height: 180px;
+    border: 2px dashed #bbb;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .3s;
+    background: #fafafa;
+    text-align: center;
+}
+
+.drop-zone:hover {
+    border-color: #111;
+    background: #f2f2f2;
+}
+
+.drop-zone.dragover {
+    border-color: #111;
+    background: #ededed;
+}
+
+.drop-zone p {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.drop-zone span {
+    color: #777;
+    font-size: 14px;
+}
+
+#previewImage {
+    width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    margin-top: 15px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+}

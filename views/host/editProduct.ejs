@@ -18,11 +18,12 @@
         </p>
       </div>
 
-      <form
-        action="<%= editing ? '/host/edit-product' : '/host/add-product' %>"
-        method="POST"
-        class="product-form"
-      >
+    <form
+     action="<%= editing ? '/host/edit-product' : '/host/add-product' %>"
+     method="POST"
+     enctype="multipart/form-data"
+     class="product-form"
+    >
 
         <!-- hidden product id -->
         <% if(editing){ %>
@@ -115,20 +116,42 @@
 
 </div>
 
-        <!-- Image -->
-        <div class="input-box">
+<!-- Image URL -->
+    <div class="input-box">
+      <label>Image URL (Optional)</label>
+    
+      <input
+        type="text"
+        name="image"
+        placeholder="Paste image url"
+        value="<%= editing ? product.image : '' %>"
+      />
+    </div>
 
-          <label>Image URL</label>
-
-          <input
-            type="text"
-            name="image"
-            placeholder="Paste image url"
-            value="<%= editing ? product.image : '' %>"
-            required
-          />
-
-        </div>
+     <!-- Drag & Drop Upload -->
+     <div class="input-box">
+       <label>Upload Image (Optional)</label>
+     
+       <div class="drop-zone" id="dropZone">
+         <p>📸 Drag & Drop Image Here</p>
+         <span>OR Click to Upload</span>
+     
+         <input
+           type="file"
+           name="productImage"
+           id="fileInput"
+           accept="image/*"
+           hidden
+         />
+       </div>
+     
+       <img
+         id="previewImage"
+         src=""
+         alt="Preview"
+         style="display:none;"
+       />
+     </div>
 
         <!-- Description -->
         <div class="input-box">
