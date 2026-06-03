@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 hostRouter.post(
-  "/host/add-product",
+  "/add-product",
   upload.single("productImage"),
   hostControllers.postAddProduct
 );

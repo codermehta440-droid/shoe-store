@@ -2,27 +2,41 @@ const Product = require('../models/product');
 const bcrypt = require('bcryptjs');
 const Host = require('../models/hostlogin')
 
-exports.postAddProduct = (req, res) => {
+exports.postAddProduct = async (req, res, next) => {
 
-    let imageUrl = req.body.image;
+    try {
 
-    if (req.file) {
-        imageUrl = "/uploads/" + req.file.filename;
+        let imageUrl = req.body.image;
+
+        if (req.file) {
+            imageUrl = "/uploads/" + req.file.filename;
+        }
+
+        const product = new Product({
+
+            title: req.body.title,
+            price: req.body.price,
+            category: req.body.category,
+            image: imageUrl,
+            description: req.body.description,
+
+            host: {
+                userId: req.session.host._id,
+                fullName: req.session.host.fullName
+            }
+
+        });
+
+        await product.save();
+
+        res.redirect('/host/host-products');
+
+    } catch (err) {
+
+        console.log(err);
+
     }
 
-    const product = {
-        title: req.body.title,
-        price: req.body.price,
-        category: req.body.category,
-        image: imageUrl,
-        description: req.body.description
-    };
-
-    console.log(product);
-
-    // Save product in DB
-
-    res.redirect("/host/products");
 };
 
 exports.getHostHomes = (req, res, next) => {
@@ -137,44 +151,6 @@ exports.postLogin = async (req, res, next) => {
     }
 };
 
-exports.postAddProduct = async (req, res, next) => {
-
-    try {
-
-        const {
-            title,
-            price,
-            category,
-            image,
-            description
-        } = req.body;
-
-        const product = new Product({
-
-            title,
-            price,
-            category,
-            image,
-            description,
-
-            host: {
-                userId: req.session.host._id,
-                fullName: req.session.host.fullName
-            }
-
-        });
-
-        await product.save();
-
-        res.redirect('/host/host-products');
-
-    } catch (err) {
-
-        console.log(err);
-
-    }
-
-};
 
 exports.postEditProduct = async (req, res, next) => {
 
