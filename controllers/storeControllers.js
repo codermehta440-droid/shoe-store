@@ -128,6 +128,7 @@ exports.getLogin = (req, res, next) => {
         isloginpage: true,
         ishostloginpage: false,
         pageTitle: "Login Page",
+        query: req.query?.q || '',
         error: [],
         oldInput: {
             email: "",

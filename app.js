@@ -102,6 +102,7 @@ app.use((req, res, next) => {
   res.locals.isHostLoggedIn = req.session?.isHostLoggedIn || false;
   res.locals.user = req.session?.user || null;
   res.locals.host = req.session?.host || null;
+  res.locals.query = req.query?.q || '';
   res.locals.isloginpage = false;
   res.locals.ishostloginpage = false;
   next();
@@ -137,7 +138,7 @@ async function startApp() {
   }
 
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port http://localhost:${PORT}`);
   });
 }
 

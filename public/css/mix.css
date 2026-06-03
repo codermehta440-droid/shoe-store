@@ -281,23 +281,25 @@ nav .cart span {
   width: 220px;
   background: #fff;
   position: absolute;
-  top: 65px;
+  top: calc(100% + 10px);
   left: 0;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
 
-  opacity: 0;
-  visibility: hidden;
+  z-index: 99999;
+
+  display: none;
   transform: translateY(20px);
-
   transition: 0.4s ease;
 }
 
 .category-menu.active .menu {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0px);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(0);
 }
 
 .category-menu .menu a {
@@ -1009,7 +1011,6 @@ main .special-offers {
 
 .desc {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
