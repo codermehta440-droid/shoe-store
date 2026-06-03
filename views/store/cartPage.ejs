@@ -129,19 +129,19 @@
                   </span>
                 </div>
 
-                <div class="quantity">
+<div class="quantity">
 
-                  <a href="/cart/decrease/<%= item._id %>">
-                    <i class="ri-subtract-line"></i>
-                  </a>
+  <a href="/cart/decrease/<%= item.productId %>">
+    <i class="ri-subtract-line"></i>
+  </a>
 
-                  <p><%= item.quantity %></p>
+  <p><%= item.quantity %></p>
 
-                  <a href="/cart/increase/<%= item._id %>">
-                    <i class="ri-add-line"></i>
-                  </a>
+  <a href="/cart/increase/<%= item.productId %>">
+    <i class="ri-add-line"></i>
+  </a>
 
-                </div>
+</div>
 
               </div>
 
@@ -173,12 +173,12 @@
 
             <div class="summary-item">
               <p>Discount</p>
-              <span>- ₹300</span>
+              <span>- ₹<%= discount %></span>
             </div>
 
             <div class="summary-item total">
               <p>Total</p>
-              <span> ₹<%= totalPrice > 300 ? totalPrice - 300 : totalPrice %> </span>
+              <span> ₹<%= totalPrice > discount ? totalPrice - discount : totalPrice %></span>
             </div>
 
             <!-- ADDRESS -->

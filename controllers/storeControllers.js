@@ -390,9 +390,17 @@ exports.getCartPage = async (req, res, next) => {
             }
         });
 
+        const totalQty = cartItems.reduce(
+            (sum, item) => sum + item.quantity,
+            0
+        );
+
+        const discount = totalQty * 300;
+
         res.render('store/cartPage', {
             cartItems,
             totalPrice,
+            discount,
             message: req.session.orderMessage,
             isLoggedIn: req.session.isLoggedIn,
             isHostLoggedIn: req.session.isHostLoggedIn,
@@ -970,4 +978,69 @@ exports.postResetPassword = async (req, res) => {
 
     }
 
+};
+
+
+// inc & dec product
+
+exports.increaseQuantity = async (req, res) => {
+    console.log("Increase clicked");
+    console.log(req.params.productId);
+    try {
+
+        const productId = req.params.productId;
+
+        const userData = await User.findById(req.session.user._id);
+
+        const cartItem = userData.cart.find(
+            item => item.productId.toString() === productId
+        );
+
+        if (cartItem) {
+            cartItem.quantity += 1;
+            await userData.save();
+        }
+
+        res.redirect('/cart');
+
+    } catch (err) {
+        console.log(err);
+        res.redirect('/cart');
+    }
+};
+
+exports.decreaseQuantity = async (req, res) => {
+    try {
+
+        const productId = req.params.productId;
+
+        const userData = await User.findById(req.session.user._id);
+
+        const cartItem = userData.cart.find(
+            item => item.productId.toString() === productId
+        );
+
+        if (cartItem) {
+
+            if (cartItem.quantity > 1) {
+
+                cartItem.quantity -= 1;
+
+            } else {
+
+                userData.cart = userData.cart.filter(
+                    item => item.productId.toString() !== productId
+                );
+
+            }
+
+            await userData.save();
+        }
+
+        res.redirect('/cart');
+
+    } catch (err) {
+        console.log(err);
+        res.redirect('/cart');
+    }
 };

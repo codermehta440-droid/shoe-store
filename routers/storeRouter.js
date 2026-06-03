@@ -35,4 +35,15 @@ storeRouter.post("/reset-password", storeControllers.postResetPassword);
 //email verify to signup
 storeRouter.get('/verify-email/:token',storeControllers.verifyEmail);
 
+// inc & dec product 
+storeRouter.get(
+    '/cart/increase/:productId',
+    storeControllers.increaseQuantity
+);
+
+storeRouter.get(
+    '/cart/decrease/:productId',
+    storeControllers.decreaseQuantity
+);
+
 module.exports = storeRouter; 
