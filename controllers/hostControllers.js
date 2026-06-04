@@ -153,8 +153,11 @@ exports.postLogin = async (req, res, next) => {
 
 
 exports.postEditProduct = async (req, res, next) => {
-
     try {
+
+        if (!req.body) {
+            return res.status(400).send('No form data received');
+        }
 
         const {
             productId,
@@ -166,23 +169,18 @@ exports.postEditProduct = async (req, res, next) => {
         } = req.body;
 
         await Product.findByIdAndUpdate(productId, {
-
             title,
             price,
             category,
             image,
             description
-
         });
 
         res.redirect('/host/host-products');
 
     } catch (err) {
-
         console.log(err);
-
     }
-
 };
 
 exports.postDeleteProduct = async (req, res, next) => {

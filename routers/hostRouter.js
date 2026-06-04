@@ -27,9 +27,12 @@ hostRouter.get('/host-products', hostControllers.getHostProducts);
 hostRouter.get('/hostLogin', hostControllers.getLogin)
 hostRouter.post('/specialOffer', hostControllers.postspecialOffer)
 
-hostRouter.post('/add-product', hostControllers.postAddProduct)
-hostRouter.post('/edit-product', hostControllers.postEditProduct);
-hostRouter.post('/delete-product',hostControllers.postDeleteProduct);
+hostRouter.post(
+  '/edit-product',
+  upload.single('productImage'),
+  hostControllers.postEditProduct
+);
+hostRouter.post('/delete-product', hostControllers.postDeleteProduct);
 hostRouter.post('/hostLogin', hostControllers.postLogin)
 
 
